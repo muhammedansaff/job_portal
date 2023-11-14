@@ -2,6 +2,7 @@ import 'package:JOBHUB/user_state.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:JOBHUB/login/login_screen.dart';
+//my name is muhammedansaf
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +44,7 @@ class JobApp extends StatelessWidget {
                 child: Text(
                   "An error has occured",
                   style: TextStyle(
-                    color: Colors.red,
+                    color: Colors.black,
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
                   ),
