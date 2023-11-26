@@ -2,10 +2,13 @@
 
 import 'package:JOBHUB/Services/global_variables.dart';
 import 'package:JOBHUB/login/login_screen.dart';
+import 'package:JOBHUB/refractor/materialbutton.dart';
+import 'package:JOBHUB/refractor/textformfieldstyle.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:JOBHUB/refractor/container.dart';
 
 class Forgetpassword extends StatefulWidget {
   const Forgetpassword({super.key});
@@ -63,7 +66,6 @@ class _ForgetpasswordState extends State<Forgetpassword>
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
         children: [
@@ -86,7 +88,7 @@ class _ForgetpasswordState extends State<Forgetpassword>
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ListView(
               children: [
-                SizedBox(height: size.height * 0.1),
+                const SizedBox(height: 50),
                 const Text(
                   'Forget Password',
                   style: TextStyle(
@@ -96,57 +98,44 @@ class _ForgetpasswordState extends State<Forgetpassword>
                       fontFamily: 'forget'),
                 ),
                 const SizedBox(
-                  height: 25,
+                  height: 50,
                 ),
-                const Text(
-                  'Email adress',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      fontStyle: FontStyle.italic),
+                Refcontt(
+                  childd: TextField(
+                    cursorColor: Colors.white,
+                    style: newstyle,
+                    controller: _forgetPasswordController,
+                    decoration: deco('EmailAdress', 15, const SizedBox()),
+                  ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
-                Container(
-                  color: Colors.black,
-                  child: TextField(
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                    controller: _forgetPasswordController,
-                    decoration: const InputDecoration(
-                      fillColor: Colors.white,
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                Stack(
+                  children: [
+                    Bottun(
+                      onPressed: _forgetPasswordSubmitForm,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [buttontext('Reset')],
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 60,
-                ),
-                MaterialButton(
-                  onPressed: () {
-                    _forgetPasswordSubmitForm();
-                  },
-                  color: Colors.greenAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(13),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 14),
-                    child: Text(
-                      'Reset now',
-                      style: TextStyle(
-                          fontStyle: FontStyle.italic,
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: SizedBox(
+                        height: 40,
+                        width: 30,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.canPop(context)
+                                ? Navigator.pop(context)
+                                : null;
+                          },
+                          child: Image.asset('assets/images/back.png'),
+                        ),
+                      ),
+                    )
+                  ],
                 )
               ],
             ),

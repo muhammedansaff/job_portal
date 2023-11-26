@@ -1,6 +1,10 @@
+import 'package:JOBHUB/refractor/cachedimage.dart';
 import 'package:JOBHUB/refractor/container.dart';
+import 'package:JOBHUB/refractor/materialbutton.dart';
+
+import 'package:JOBHUB/refractor/textform.dart';
 import 'package:JOBHUB/refractor/textformfieldstyle.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +37,8 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _loginFormKey = GlobalKey<FormState>();
 
+  get child => null;
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -52,13 +58,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           ..addListener(() {
             setState(() {});
           })
-          ..addStatusListener((animationStatus) {
-            // ignore: unrelated_type_equality_checks
-            if (AnimationStatus == AnimationStatus.completed) {
-              _animationController.reset();
-              _animationController.forward();
-            }
-          });
+          ..addStatusListener((animationStatus) {});
     _animationController.forward();
     _animationController.repeat();
     super.initState();
@@ -99,18 +99,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     return Scaffold(
       body: Stack(
         children: [
-          CachedNetworkImage(
-            imageUrl: loginUrlImage,
-            placeholder: (context, url) => Image.asset(
-              'assets/images/loading.gif',
-              fit: BoxFit.cover,
-            ),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-            width: double.infinity,
-            height: double.infinity,
-            fit: BoxFit.cover,
-            alignment: FractionalOffset(_animation.value, 0),
-          ),
+          Refimagecached(animation: _animation, imgurl: loginUrlImage),
           const SizedBox(height: 8.0),
           Container(
             color: Colors.black54,
@@ -126,69 +115,44 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                     height: 35,
                   ),
                   Form(
-                    autovalidateMode: AutovalidateMode.disabled,
                     key: _loginFormKey,
                     child: Column(
                       children: [
-                        Contt(
-                          childd: TextFormField(
-                              cursorColor: Colors.white,
-                              textInputAction: TextInputAction.next,
-                              onEditingComplete: () => FocusScope.of(context)
-                                  .requestFocus(_passFocusNode),
-                              keyboardType: TextInputType.emailAddress,
-                              controller: _emailTextControler,
-                              validator: (value) {
-                                if (value!.isEmpty || !value.contains('@')) {
-                                  return '   please enter a valid email';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              style: newstyle,
-                              decoration: deco('Email')),
+                        Refcontt(
+                          childd: Reftxtfield(
+                              deccc: deco('Email', 13, const SizedBox()),
+                              typee: 'email',
+                              inpp: TextInputType.emailAddress,
+                              fnode: _passFocusNode,
+                              txtcontroller: _emailTextControler),
                         ),
                         const SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
-                        Contt(
-                          childd: TextFormField(
-                            cursorColor: Colors.white,
-                            showCursor: true,
-                            textInputAction: TextInputAction.next,
-                            focusNode: _passFocusNode,
-                            keyboardType: TextInputType.visiblePassword,
-                            controller: _passTextController,
-                            obscureText: _obscureText, // change it dynamically
-                            validator: (value) {
-                              if (value!.isEmpty || value.length < 7) {
-                                return '    please Enter a valid password';
-                              } else {
-                                return null;
-                              }
-                            },
-                            style: newstyle,
-                            decoration: InputDecoration(
-                                suffixIcon: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _obscureText = !_obscureText;
-                                    });
-                                  },
-                                  child: Icon(
-                                    _obscureText
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                    color: Colors.white,
-                                  ),
+                        Refcontt(
+                          childd: Reftxtfield(
+                            deccc: deco(
+                              'Password',
+                              13,
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _obscureText = !_obscureText;
+                                  });
+                                },
+                                child: Icon(
+                                  _obscureText
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: Colors.white,
                                 ),
-                                contentPadding:
-                                    const EdgeInsets.only(left: 10, top: 15),
-                                hintText: 'password',
-                                hintStyle: const TextStyle(color: Colors.white),
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                errorBorder: InputBorder.none),
+                              ),
+                            ),
+                            typee: 'password',
+                            inpp: TextInputType.visiblePassword,
+                            obsc: _obscureText,
+                            fnode: _passFocusNode,
+                            txtcontroller: _passTextController,
                           ),
                         ),
                         const SizedBox(
@@ -207,7 +171,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                             },
                             child: const Text("Forget password ?",
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.greenAccent,
                                   fontSize: 17,
                                   fontStyle: FontStyle.italic,
                                 )),
@@ -216,25 +180,13 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                         const SizedBox(
                           height: 10,
                         ),
-                        MaterialButton(
+                        Bottun(
                           onPressed: _submitFormOnLogin,
-                          color: Colors.greenAccent,
-                          elevation: 0,
-                          shape: const StadiumBorder(),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 14),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "login",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                ),
-                              ],
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              buttontext('Login'),
+                            ],
                           ),
                         ),
                         const SizedBox(
@@ -253,21 +205,16 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                 ),
                                 const TextSpan(text: '   '),
                                 TextSpan(
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SignUp(),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const SignUp(),
+                                            ),
                                           ),
-                                        ),
-                                  text: 'Signup',
-                                  style: const TextStyle(
-                                    color: Colors.greenAccent,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
+                                    text: 'Signup',
+                                    style: bottomtextstyle),
                               ],
                             ),
                           ),

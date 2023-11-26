@@ -5,12 +5,17 @@ const TextStyle newstyle = TextStyle(
   fontWeight: FontWeight.bold,
 );
 
-InputDecoration deco(String hint) {
+InputDecoration deco(String hint, double topp, Widget childd) {
   return InputDecoration(
-    contentPadding: const EdgeInsets.only(left: 5),
-    hintText: hint,
-    hintStyle: const TextStyle(color: Colors.white),
-    enabledBorder: InputBorder.none,
-    focusedBorder: InputBorder.none,
-  );
+      suffixIcon: childd,
+      focusedErrorBorder: InputBorder.none,
+      contentPadding: EdgeInsets.only(left: 10, top: topp),
+      hintText: hint,
+      hintStyle: const TextStyle(color: Colors.white54),
+      enabledBorder: InputBorder.none,
+      focusedBorder: InputBorder.none,
+      errorBorder: InputBorder.none);
 }
+
+const TextStyle bottomtextstyle = TextStyle(
+    color: Colors.greenAccent, fontWeight: FontWeight.bold, fontSize: 16);

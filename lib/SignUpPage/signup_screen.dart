@@ -1,7 +1,13 @@
 import 'dart:io';
 
 import 'package:JOBHUB/Services/global_methods.dart';
+import 'package:JOBHUB/Services/global_variables.dart';
+import 'package:JOBHUB/refractor/cachedimage.dart';
 import 'package:JOBHUB/refractor/container.dart';
+import 'package:JOBHUB/refractor/materialbutton.dart';
+import 'package:JOBHUB/refractor/textform.dart';
+import 'package:JOBHUB/refractor/textformfieldstyle.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,7 +15,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:JOBHUB/SignUpPage/my_slide_show.dart';
+//import 'package:JOBHUB/SignUpPage/my_slide_show.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -18,8 +24,10 @@ class SignUp extends StatefulWidget {
   State<SignUp> createState() => _SignUpState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   //variables
+  late Animation<double> _animation;
+  late AnimationController _animationController;
   final TextEditingController _fullNameConroller =
       TextEditingController(text: '');
 
@@ -51,7 +59,30 @@ class _SignUpState extends State<SignUp> {
     _passwordFocusNode.dispose();
     _positionFocusNode.dispose();
     _phoneFocusNode.dispose();
+    _animationController.dispose();
+
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    _animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 20));
+    _animation =
+        CurvedAnimation(parent: _animationController, curve: Curves.linear)
+          ..addListener(() {
+            setState(() {});
+          })
+          ..addStatusListener((animationStatus) {
+            // ignore: unrelated_type_equality_checks
+            if (AnimationStatus == AnimationStatus.completed) {
+              _animationController.reset();
+              _animationController.forward();
+            }
+          });
+    _animationController.forward();
+    _animationController.repeat();
+    super.initState();
   }
 
   File? imageFile;
@@ -77,7 +108,7 @@ class _SignUpState extends State<SignUp> {
                 child: const Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.all(4.0),
+                      padding: EdgeInsets.all(4.10),
                       child: Icon(
                         Icons.camera,
                         color: Colors.purple,
@@ -97,7 +128,7 @@ class _SignUpState extends State<SignUp> {
                 child: const Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.all(4.0),
+                      padding: EdgeInsets.all(4.10),
                       child: Icon(
                         Icons.image,
                         color: Colors.purple,
@@ -202,15 +233,11 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       body: Stack(
         children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: const MySlideshow(),
-          ),
+          Refimagecached(animation: _animation, imgurl: signupimageurl),
           Container(
             color: Colors.black38,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 80),
+              padding: const EdgeInsets.only(top: 50, left: 25, right: 25),
               child: ListView(
                 children: [
                   Form(
@@ -222,12 +249,12 @@ class _SignUpState extends State<SignUp> {
                             _showImageDialog();
                           },
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.only(top: 1),
                             child: Container(
                               width: 100,
                               height: 100,
                               decoration: BoxDecoration(
-                                color: Colors.white54,
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(50),
                               ),
                               child: ClipOval(
@@ -247,199 +274,106 @@ class _SignUpState extends State<SignUp> {
                         const SizedBox(
                           height: 30,
                         ),
-                        Contt(
-                          childd: TextFormField(
-                            textInputAction: TextInputAction.next,
-                            onEditingComplete: () => FocusScope.of(context)
-                                .requestFocus(_emailFocusNode),
-                            keyboardType: TextInputType.text,
-                            controller: _fullNameConroller,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "this Field is missing";
-                              } else {
-                                return null;
-                              }
-                            },
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.only(left: 10),
-                              hintText: 'Full Name / Company Name',
-                              hintStyle: TextStyle(color: Colors.white),
-                              enabledBorder: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              errorBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                            ),
+                        Refcontt(
+                            childd: Reftxtfield(
+                                deccc: deco('Full Name/Company Name', 10,
+                                    const SizedBox()),
+                                typee: 'name',
+                                inpp: TextInputType.name,
+                                fnode: _emailFocusNode,
+                                txtcontroller: _fullNameConroller)),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Refcontt(
+                          childd: Reftxtfield(
+                            deccc: deco('Email', 15, const SizedBox()),
+                            typee: 'email',
+                            inpp: TextInputType.emailAddress,
+                            fnode: _passwordFocusNode,
+                            txtcontroller: _emailtexttConroller,
+                            tonode: _emailFocusNode,
                           ),
                         ),
                         const SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
-                        TextFormField(
-                          textInputAction: TextInputAction.next,
-                          onEditingComplete: () => FocusScope.of(context)
-                              .requestFocus(_passwordFocusNode),
-                          keyboardType: TextInputType.emailAddress,
-                          controller: _emailtexttConroller,
-                          validator: (value) {
-                            if (value!.isEmpty || !value.contains('@')) {
-                              return "please enter a valid email adress";
-                            } else {
-                              return null;
-                            }
-                          },
-                          style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                          decoration: const InputDecoration(
-                            hintText: 'email',
-                            hintStyle: TextStyle(color: Colors.white),
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            errorBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.red),
-                            ),
-                          ),
-                        ), //emailtextbox
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          textInputAction: TextInputAction.next,
-                          onEditingComplete: () => FocusScope.of(context)
-                              .requestFocus(_phoneFocusNode),
-                          keyboardType: TextInputType.visiblePassword,
-                          controller: _passwordtexttConroller,
-                          obscureText: _obscureText,
-                          validator: (value) {
-                            if (value!.isEmpty || value.length < 7) {
-                              return "please enter a valid password";
-                            } else {
-                              return null;
-                            }
-                          },
-                          style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                          decoration: InputDecoration(
-                            suffixIcon: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _obscureText = !_obscureText;
-                                });
-                              },
-                              child: Icon(
-                                _obscureText
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.white,
+                        Refcontt(
+                          childd: Reftxtfield(
+                            deccc: deco(
+                              'Password',
+                              15,
+                              GestureDetector(
+                                onTap: () {
+                                  setState(
+                                    () {
+                                      _obscureText = !_obscureText;
+                                    },
+                                  );
+                                },
+                                child: Icon(
+                                  _obscureText
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                            hintText: 'password',
-                            hintStyle: const TextStyle(color: Colors.white),
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            errorBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.red),
-                            ),
+                            obsc: _obscureText,
+                            typee: 'password',
+                            inpp: TextInputType.visiblePassword,
+                            fnode: _phoneFocusNode,
+                            txtcontroller: _passwordtexttConroller,
+                            tonode: _passwordFocusNode,
                           ),
+                        ),
+                        const SizedBox(
+                          height: 10,
                         ),
                         //passwordtextbox
-                        TextFormField(
-                          textInputAction: TextInputAction.next,
-                          onEditingComplete: () => FocusScope.of(context)
-                              .requestFocus(_positionFocusNode),
-                          keyboardType: TextInputType.phone,
-                          controller: _phoneNumberConroller,
-                          validator: (value) {
-                            if (value!.isEmpty || value.length != 10) {
-                              return "Enter a valid phone number";
-                            } else {
-                              return null;
-                            }
-                          },
-                          style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                          decoration: const InputDecoration(
-                            hintText: 'phone no.',
-                            hintStyle: TextStyle(color: Colors.white),
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            errorBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.red),
-                            ),
-                          ),
-                        ), //phonenumber
+                        Refcontt(
+                            childd: Reftxtfield(
+                          deccc: deco('Phone No', 15, const SizedBox()),
+                          typee: 'number',
+                          inpp: TextInputType.phone,
+                          fnode: _positionFocusNode,
+                          txtcontroller: _phoneNumberConroller,
+                          tonode: _phoneFocusNode,
+                        )),
+                        //phonenumber
                         const SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
-                        TextFormField(
-                          textInputAction: TextInputAction.next,
-                          onEditingComplete: () => FocusScope.of(context)
-                              .requestFocus(_positionFocusNode),
-                          keyboardType: TextInputType.text,
-                          controller: _locationConroller,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "This field is missing";
-                            } else {
-                              return null;
-                            }
-                          },
-                          style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                          decoration: const InputDecoration(
-                            hintText: 'adress/company adress',
-                            hintStyle: TextStyle(color: Colors.white),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            errorBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.red),
-                            ),
-                          ),
-                        ), //adress
+                        Refcontt(
+                          childd: Reftxtfield(
+                              deccc:
+                                  deco('Adress/Company', 15, const SizedBox()),
+                              typee: 'adress',
+                              inpp: TextInputType.streetAddress,
+                              fnode: _positionFocusNode,
+                              txtcontroller: _locationConroller),
+                        ), //adress),
                         const SizedBox(
-                          height: 25,
+                          height: 50,
                         ),
                         _isloading
-                            ? Center(
-                                child: Container(
-                                  width: 70,
-                                  height: 70,
-                                  child: const CircularProgressIndicator(),
-                                ),
-                              )
-                            : MaterialButton(
-                                onPressed: () {
-                                  _submitFormssOnignup();
-                                },
-                                color: Colors.greenAccent,
-                                elevation: 8,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(13),
-                                ),
-                                child: const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 14),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Signup",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
-                                      )
-                                    ],
+                            ? const Center(
+                                child: SizedBox(
+                                  width: 35,
+                                  height: 35,
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: Colors.blue,
                                   ),
                                 ),
+                              )
+                            : Bottun(
+                                onPressed: _submitFormssOnignup,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [buttontext('SignUp')],
+                                ),
                               ),
+
                         const SizedBox(
                           height: 25,
                         ),
@@ -456,16 +390,12 @@ class _SignUpState extends State<SignUp> {
                                 ),
                                 const TextSpan(text: "    "),
                                 TextSpan(
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () => Navigator.canPop(context)
-                                        ? Navigator.pop(context)
-                                        : null,
-                                  text: "login",
-                                  style: const TextStyle(
-                                      color: Colors.greenAccent,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                )
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () => Navigator.canPop(context)
+                                          ? Navigator.pop(context)
+                                          : null,
+                                    text: "Login",
+                                    style: bottomtextstyle)
                               ],
                             ),
                           ),
