@@ -1,3 +1,4 @@
+import 'package:JOBHUB/Jobs/jobs_screen.dart';
 import 'package:JOBHUB/refractor/cachedimage.dart';
 import 'package:JOBHUB/refractor/container.dart';
 import 'package:JOBHUB/refractor/materialbutton.dart';
@@ -76,7 +77,15 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
             password: _passTextController.text.trim());
 
         // ignore: use_build_context_synchronously
-        Navigator.canPop(context) ? Navigator.pop(context) : null;
+        Navigator.canPop(context)
+            // ignore: use_build_context_synchronously
+            ? Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const JobScreen(),
+                ),
+              )
+            : null;
       } catch (error) {
         setState(
           () {
@@ -151,7 +160,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                             typee: 'password',
                             inpp: TextInputType.visiblePassword,
                             obsc: _obscureText,
-                            fnode: _passFocusNode,
+                            tonode: _passFocusNode,
                             txtcontroller: _passTextController,
                           ),
                         ),

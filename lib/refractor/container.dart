@@ -10,9 +10,9 @@ class Refcontt extends StatelessWidget {
         width: 460,
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          color: Colors.black87,
-          border: Border.all(width: 3, color: Colors.white70),
-          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          border: Border.all(width: 5, color: Colors.black),
+          borderRadius: BorderRadius.circular(50),
         ),
         child: childd);
   }

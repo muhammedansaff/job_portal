@@ -105,7 +105,7 @@ class _ForgetpasswordState extends State<Forgetpassword>
                     cursorColor: Colors.white,
                     style: newstyle,
                     controller: _forgetPasswordController,
-                    decoration: deco('EmailAdress', 15, const SizedBox()),
+                    decoration: deco('EmailAdress', 13, const SizedBox()),
                   ),
                 ),
                 const SizedBox(

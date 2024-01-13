@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:JOBHUB/Services/global_methods.dart';
 import 'package:JOBHUB/Services/global_variables.dart';
+import 'package:JOBHUB/login/login_screen.dart';
 import 'package:JOBHUB/refractor/cachedimage.dart';
 import 'package:JOBHUB/refractor/container.dart';
 import 'package:JOBHUB/refractor/materialbutton.dart';
@@ -49,6 +50,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   final FocusNode _passwordFocusNode = FocusNode();
   final FocusNode _phoneFocusNode = FocusNode();
   final FocusNode _positionFocusNode = FocusNode();
+
+  //focus nodes and textediting controlls
   @override
   void dispose() {
     _fullNameConroller.dispose();
@@ -62,7 +65,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     _animationController.dispose();
 
     super.dispose();
-  }
+  } //dispose function
 
   @override
   void initState() {
@@ -83,7 +86,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     _animationController.forward();
     _animationController.repeat();
     super.initState();
-  }
+  } //animation background
 
   File? imageFile;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -111,12 +114,12 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                       padding: EdgeInsets.all(4.10),
                       child: Icon(
                         Icons.camera,
-                        color: Colors.purple,
+                        color: Colors.black,
                       ),
                     ),
                     Text(
                       "camera",
-                      style: TextStyle(color: Colors.purple),
+                      style: TextStyle(color: Colors.black),
                     )
                   ],
                 ),
@@ -131,12 +134,12 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                       padding: EdgeInsets.all(4.10),
                       child: Icon(
                         Icons.image,
-                        color: Colors.purple,
+                        color: Colors.black,
                       ),
                     ),
                     Text(
                       "gallery",
-                      style: TextStyle(color: Colors.purple),
+                      style: TextStyle(color: Colors.black),
                     )
                   ],
                 ),
@@ -147,7 +150,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       },
     );
   }
-  //functions
+  //camera function
 
   void _getFromCamera() async {
     XFile? pickedFile =
@@ -177,7 +180,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         imageFile = File(croppedimage.path);
       });
     }
-  }
+  } //gallery image function
 
   void _submitFormssOnignup() async {
     final isValid = _signupFormKey.currentState!.validate();
@@ -214,11 +217,20 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           },
         );
         // ignore: use_build_context_synchronously
-        Navigator.canPop(context) ? Navigator.pop(context) : null;
+        Navigator.canPop(context)
+            // ignore: use_build_context_synchronously
+            ? Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Login(),
+                ),
+              )
+            : null;
       } catch (error) {
         setState(() {
           _isloading = false;
-        });
+        }); //authentication
+
         // ignore: use_build_context_synchronously
         GlobalMethod.showErrorDialog(error: error.toString(), ctx: context);
       }
@@ -226,7 +238,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     setState(() {
       _isloading = false;
     });
-  }
+  } //submit function
 
   @override
   Widget build(BuildContext context) {
@@ -275,19 +287,24 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                           height: 30,
                         ),
                         Refcontt(
-                            childd: Reftxtfield(
-                                deccc: deco('Full Name/Company Name', 10,
-                                    const SizedBox()),
-                                typee: 'name',
-                                inpp: TextInputType.name,
-                                fnode: _emailFocusNode,
-                                txtcontroller: _fullNameConroller)),
+                          childd: Reftxtfield(
+                              deccc: deco('Full Name/Company Name', 12,
+                                  const SizedBox()),
+                              typee: 'name',
+                              inpp: TextInputType.name,
+                              fnode: _emailFocusNode,
+                              txtcontroller: _fullNameConroller),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
                         Refcontt(
                           childd: Reftxtfield(
-                            deccc: deco('Email', 15, const SizedBox()),
+                            deccc: deco(
+                              'Email',
+                              12,
+                              const SizedBox(),
+                            ),
                             typee: 'email',
                             inpp: TextInputType.emailAddress,
                             fnode: _passwordFocusNode,
@@ -302,7 +319,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                           childd: Reftxtfield(
                             deccc: deco(
                               'Password',
-                              15,
+                              12,
                               GestureDetector(
                                 onTap: () {
                                   setState(
@@ -333,7 +350,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                         //passwordtextbox
                         Refcontt(
                             childd: Reftxtfield(
-                          deccc: deco('Phone No', 15, const SizedBox()),
+                          deccc: deco('Phone No', 12, const SizedBox()),
                           typee: 'number',
                           inpp: TextInputType.phone,
                           fnode: _positionFocusNode,
@@ -347,10 +364,10 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                         Refcontt(
                           childd: Reftxtfield(
                               deccc:
-                                  deco('Adress/Company', 15, const SizedBox()),
+                                  deco('Adress/Company', 12, const SizedBox()),
                               typee: 'adress',
                               inpp: TextInputType.streetAddress,
-                              fnode: _positionFocusNode,
+                              tonode: _positionFocusNode,
                               txtcontroller: _locationConroller),
                         ), //adress),
                         const SizedBox(
@@ -362,7 +379,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                                   width: 35,
                                   height: 35,
                                   child: CircularProgressIndicator(
-                                    backgroundColor: Colors.blue,
+                                    backgroundColor: Colors.red,
                                   ),
                                 ),
                               )
@@ -411,4 +428,4 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       ),
     );
   }
-}
+}//textfield design

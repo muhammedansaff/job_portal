@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 //import 'package:JOBHUB/login/login_screen.dart';
 //my name is muhammedansaf
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(JobApp());
 }
 
@@ -23,8 +24,9 @@ class JobApp extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           print("successful");
-          return const MaterialApp(
-            home: Scaffold(
+          return MaterialApp(
+            theme: ThemeData(primarySwatch: Colors.blue),
+            home: const Scaffold(
               body: Center(
                 child: Text(
                   "jobportal app is being initialized",

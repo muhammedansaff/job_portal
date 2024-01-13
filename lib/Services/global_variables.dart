@@ -1,5 +1,6 @@
 String loginUrlImage =
-    'https://imageupload.io/ib/uEZsMjad8tf85QU_1699540988.png';
+    'https://i.postimg.cc/C5NjC3tS/Screenshot-2023-11-09-200741.png';
 String forgotimageurl =
     'https://images.pexels.com/photos/3182834/pexels-photo-3182834.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1';
-String signupimageurl = 'https://i.postimg.cc/htcXYM9G/image-2-Large.png';
+String signupimageurl =
+    'https://images.squarespace-cdn.com/content/v1/540e2e30e4b0a9fac1c138ac/2cf5bffb-83da-4d08-a1a1-81c88de91356/plumbers-working-together-mobile.jpg?format=1500w';

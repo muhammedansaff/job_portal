@@ -19,8 +19,8 @@ class Bottun extends StatelessWidget {
           child: ElevatedButton(
             onPressed: onPressed,
             style: ButtonStyle(
-              foregroundColor:
-                  const MaterialStatePropertyAll(Colors.blueAccent),
+              backgroundColor: const MaterialStatePropertyAll(Colors.blue),
+              foregroundColor: const MaterialStatePropertyAll(Colors.red),
               overlayColor: const MaterialStatePropertyAll(Colors.greenAccent),
               shape: MaterialStateProperty.all(
                 RoundedRectangleBorder(
@@ -29,8 +29,7 @@ class Bottun extends StatelessWidget {
               ),
             ),
             child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                child: child),
+                padding: const EdgeInsets.symmetric(vertical: 7), child: child),
           ),
         ),
       ],

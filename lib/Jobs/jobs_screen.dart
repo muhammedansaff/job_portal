@@ -1,5 +1,6 @@
-import 'package:JOBHUB/user_state.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:JOBHUB/Widgets/bottom_nav_bar.dart';
+//import 'package:JOBHUB/user_state.dart';
+
 import 'package:flutter/material.dart';
 
 class JobScreen extends StatefulWidget {
@@ -9,60 +10,36 @@ class JobScreen extends StatefulWidget {
   State<JobScreen> createState() => _JobScreenState();
 }
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
 class _JobScreenState extends State<JobScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromARGB(255, 124, 196, 241),
-                  Color.fromARGB(255, 96, 185, 241)
-                ],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
+      debugShowCheckedModeBanner: false,
+      home: Stack(
+        children: [
+          const FlowingWaterBackground(),
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            bottomNavigationBar: BottomNavigationbarforapp(
+              indexNum: 0,
+            ),
+            appBar: AppBar(
+              elevation: 10,
+              toolbarHeight: 40,
+              shadowColor: Colors.black,
+              backgroundColor: Colors.blue,
+              title: const Center(
+                child: Text(
+                  'Jobscreen',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-        body: Stack(
-          children: [
-            const FlowingWaterBackground(),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      _auth.signOut();
-                      Navigator.canPop(context) ? Navigator.pop(context) : null;
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (_) => const UserState()));
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.greenAccent,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                    ),
-                    child: const Text(
-                      'log out',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

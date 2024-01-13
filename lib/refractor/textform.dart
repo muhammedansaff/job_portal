@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class Reftxtfield extends StatefulWidget {
   final String? typee;
   final Widget? childd;
-  final FocusNode fnode;
+  final FocusNode? fnode;
   final TextEditingController txtcontroller;
   final TextInputType inpp;
   final bool obsc;
@@ -20,7 +20,7 @@ class Reftxtfield extends StatefulWidget {
     required this.typee,
     required this.inpp,
     this.childd,
-    required this.fnode,
+    this.fnode,
     required this.txtcontroller,
   });
 
@@ -33,8 +33,8 @@ class _ReftxtfieldState extends State<Reftxtfield> {
   Widget build(BuildContext context) {
     return TextFormField(
         obscureText: widget.obsc,
-        cursorColor: Colors.white,
-        textInputAction: TextInputAction.next,
+        cursorColor: Colors.black,
+        textInputAction: TextInputAction.go,
         onEditingComplete: () {
           FocusScope.of(context).requestFocus(widget.fnode);
         },
@@ -46,33 +46,33 @@ class _ReftxtfieldState extends State<Reftxtfield> {
           String? rtntxt;
           if (widget.typee == 'email') {
             if (value!.isEmpty || !value.contains('@')) {
-              String rtntxt = ' please enter a valid Email';
+              String rtntxt = '   please enter a valid Email';
               return rtntxt;
             }
           }
           if (widget.typee == 'name') {
             if (value!.isEmpty) {
-              String rtntxt = ' This field is missing';
+              String rtntxt = '   This field is missing';
               return rtntxt;
             }
           }
           if (widget.typee == 'password') {
             if (value!.isEmpty || value.length < 7) {
-              String rtntxt = ' please Enter a valid password ';
+              String rtntxt = '   please Enter a valid password ';
 
               return rtntxt;
             }
           }
           if (widget.typee == 'number') {
             if (value!.isEmpty || value.length != 10) {
-              String rtntxt = ' Enter a valid phone number';
+              String rtntxt = '   Enter a valid phone number';
 
               return rtntxt;
             }
           }
           if (widget.typee == 'adress') {
             if (value!.isEmpty) {
-              String rtntxt = ' This field is missing';
+              String rtntxt = '   This field is missing';
               return rtntxt;
             }
           }

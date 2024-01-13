@@ -1,0 +1,4 @@
+{
+    "dart.debugExternalPackageLibraries": true,
+    "dart.debugSdkLibraries": true
+}
