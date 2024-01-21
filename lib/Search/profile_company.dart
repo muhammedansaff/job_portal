@@ -20,14 +20,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             shadowColor: Colors.black,
-            elevation: 10,
+            elevation: 2,
             toolbarHeight: 40,
-            backgroundColor: Colors.blue,
+            backgroundColor: const Color(0xFFF5F5DC),
             title: const Center(
               child: Text(
                 'Profile ',
                 style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
               ),
             ),
           ),

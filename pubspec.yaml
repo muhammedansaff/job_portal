@@ -36,13 +36,13 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   
-  image_picker: ^1.0.4
+  image_picker: ^1.0.7
   image_cropper: ^5.0.0
   fluttericon: ^2.0.0
   url_launcher: ^6.1.14
   
-  uuid: ^4.0.0
-  fluttertoast: ^8.2.2
+  uuid: ^4.3.3
+  fluttertoast: ^8.2.4
   firebase_auth: ^4.9.0
   firebase_core: ^2.15.1
   cloud_firestore: ^4.9.1
@@ -54,7 +54,13 @@ dependencies:
      ref: '4be9de9ffed5398fd7d5f44bbb07dcd3d3f1711b'  
      path: packages/pdfx
   cached_network_image: ^3.3.0
+  http: ^1.1.2
+  geocoding: ^2.1.1
+  geolocator: ^10.1.0
+  google_maps_flutter: ^2.5.3
   
+  
+
   
  
   
@@ -73,7 +79,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -89,7 +95,10 @@ flutter:
         - asset: fonts/ans.ttf
     - family: forget
       fonts:
-        - asset: fonts/forget.ttf        
+        - asset: fonts/forget.ttf  
+    - family: newfont
+      fonts:
+        - asset: fonts/newfont.ttf          
       
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -101,10 +110,11 @@ flutter:
   assets:
     - assets/images/ansaf.png
     - assets/images/wallpaper.jpg
-    - assets/images/login.png
+    
     - assets/images/signup.png
     - assets/images/back.png
-    - "assets/images/loading.gif"
+    - assets/images/loading.gif
+    - assets/images/login.png
    
     
 

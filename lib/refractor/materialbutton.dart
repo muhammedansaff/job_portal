@@ -19,9 +19,10 @@ class Bottun extends StatelessWidget {
           child: ElevatedButton(
             onPressed: onPressed,
             style: ButtonStyle(
-              backgroundColor: const MaterialStatePropertyAll(Colors.blue),
+              backgroundColor:
+                  const MaterialStatePropertyAll(Color(0xFFF5F5DC)),
               foregroundColor: const MaterialStatePropertyAll(Colors.red),
-              overlayColor: const MaterialStatePropertyAll(Colors.greenAccent),
+              overlayColor: const MaterialStatePropertyAll(Colors.white),
               shape: MaterialStateProperty.all(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0),
@@ -41,6 +42,6 @@ Text buttontext(String buttontext) {
   return Text(
     buttontext,
     style: const TextStyle(
-        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+        color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
   );
 }

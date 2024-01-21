@@ -1,5 +1,6 @@
 import 'package:JOBHUB/refractor/textformfieldstyle.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Reftxtfield extends StatefulWidget {
   final String? typee;
@@ -46,33 +47,33 @@ class _ReftxtfieldState extends State<Reftxtfield> {
           String? rtntxt;
           if (widget.typee == 'email') {
             if (value!.isEmpty || !value.contains('@')) {
-              String rtntxt = '   please enter a valid Email';
+              showToast("enter a valid email adress");
               return rtntxt;
             }
           }
           if (widget.typee == 'name') {
             if (value!.isEmpty) {
-              String rtntxt = '   This field is missing';
+              showToast("Name field is missing");
+              ;
               return rtntxt;
             }
           }
           if (widget.typee == 'password') {
             if (value!.isEmpty || value.length < 7) {
-              String rtntxt = '   please Enter a valid password ';
+              showToast("please Enter a valid password ");
 
               return rtntxt;
             }
           }
           if (widget.typee == 'number') {
             if (value!.isEmpty || value.length != 10) {
-              String rtntxt = '   Enter a valid phone number';
-
+              showToast("please Enter a valid phone number ");
               return rtntxt;
             }
           }
           if (widget.typee == 'adress') {
             if (value!.isEmpty) {
-              String rtntxt = '   This field is missing';
+              showToast("please Enter your adress");
               return rtntxt;
             }
           }
@@ -80,5 +81,24 @@ class _ReftxtfieldState extends State<Reftxtfield> {
           return rtntxt;
         },
         decoration: widget.deccc);
+  }
+
+  double toastPosition = 0.0;
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.grey,
+      textColor: Colors.white,
+      fontSize: 16.0,
+      webPosition: "center",
+      webBgColor: "#e74c3c",
+      webShowClose: true,
+    );
+    setState(() {
+      toastPosition += 50.0;
+    });
   }
 }

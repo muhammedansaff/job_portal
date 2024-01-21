@@ -6,7 +6,8 @@ import 'package:JOBHUB/login/login_screen.dart';
 import 'package:JOBHUB/refractor/cachedimage.dart';
 import 'package:JOBHUB/refractor/container.dart';
 import 'package:JOBHUB/refractor/materialbutton.dart';
-import 'package:JOBHUB/refractor/textform.dart';
+import 'package:JOBHUB/refractor/textfield/secondtxtfield.dart';
+import 'package:JOBHUB/refractor/textfield/textform.dart';
 import 'package:JOBHUB/refractor/textformfieldstyle.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -111,7 +112,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                 child: const Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.all(4.10),
+                      padding: EdgeInsets.all(4.15),
                       child: Icon(
                         Icons.camera,
                         color: Colors.black,
@@ -131,7 +132,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                 child: const Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.all(4.10),
+                      padding: EdgeInsets.all(4.15),
                       child: Icon(
                         Icons.image,
                         color: Colors.black,
@@ -174,7 +175,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
   void _cropimage(filePath) async {
     CroppedFile? croppedimage = await ImageCropper()
-        .cropImage(sourcePath: filePath, maxHeight: 1080, maxWidth: 1080);
+        .cropImage(sourcePath: filePath, maxHeight: 1580, maxWidth: 1580);
     if (croppedimage != null) {
       setState(() {
         imageFile = File(croppedimage.path);
@@ -261,19 +262,20 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                             _showImageDialog();
                           },
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 1),
+                            padding: const EdgeInsets.only(bottom: 50),
                             child: Container(
                               width: 100,
                               height: 100,
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(50),
-                              ),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(50),
+                                  border: Border.all(
+                                      color: Colors.black, width: 2)),
                               child: ClipOval(
                                 child: imageFile == null
                                     ? Image.asset(
                                         'assets/images/ansaf.png',
-                                        scale: 10,
+                                        scale: 11,
                                       )
                                     : Image.file(
                                         imageFile!,
@@ -284,7 +286,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                           ),
                         ),
                         const SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
                         Refcontt(
                           childd: Reftxtfield(
@@ -296,7 +298,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                               txtcontroller: _fullNameConroller),
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 15,
                         ),
                         Refcontt(
                           childd: Reftxtfield(
@@ -313,7 +315,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                           ),
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 15,
                         ),
                         Refcontt(
                           childd: Reftxtfield(
@@ -332,7 +334,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                                   _obscureText
                                       ? Icons.visibility_off
                                       : Icons.visibility,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                             ),
@@ -345,7 +347,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                           ),
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 15,
                         ),
                         //passwordtextbox
                         Refcontt(
@@ -359,10 +361,10 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                         )),
                         //phonenumber
                         const SizedBox(
-                          height: 10,
+                          height: 15,
                         ),
                         Refcontt(
-                          childd: Reftxtfield(
+                          childd: passtxtfield(
                               deccc:
                                   deco('Adress/Company', 12, const SizedBox()),
                               typee: 'adress',
@@ -405,13 +407,13 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
                                 ),
-                                const TextSpan(text: "    "),
+                                const TextSpan(text: "  "),
                                 TextSpan(
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () => Navigator.canPop(context)
                                           ? Navigator.pop(context)
                                           : null,
-                                    text: "Login",
+                                    text: "login",
                                     style: bottomtextstyle)
                               ],
                             ),

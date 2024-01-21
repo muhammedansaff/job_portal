@@ -11,11 +11,14 @@ InputDecoration deco(String hint, double topp, Widget childd) {
       focusedErrorBorder: InputBorder.none,
       contentPadding: EdgeInsets.only(left: 10, top: topp),
       hintText: hint,
-      hintStyle: const TextStyle(color: Colors.black87),
+      hintStyle: const TextStyle(color: Color.fromARGB(137, 41, 39, 39)),
       enabledBorder: InputBorder.none,
       focusedBorder: InputBorder.none,
       errorBorder: InputBorder.none);
 }
 
 const TextStyle bottomtextstyle = TextStyle(
-    color: Colors.greenAccent, fontWeight: FontWeight.bold, fontSize: 16);
+    color: Color(0xFFF5F5DC),
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+    fontFamily: 'ansaf');

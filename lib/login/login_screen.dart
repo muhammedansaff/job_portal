@@ -1,9 +1,11 @@
 import 'package:JOBHUB/Jobs/jobs_screen.dart';
+
 import 'package:JOBHUB/refractor/cachedimage.dart';
 import 'package:JOBHUB/refractor/container.dart';
 import 'package:JOBHUB/refractor/materialbutton.dart';
-
-import 'package:JOBHUB/refractor/textform.dart';
+import 'package:JOBHUB/refractor/textfield/secondtxtfield.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:JOBHUB/refractor/textfield/textform.dart';
 import 'package:JOBHUB/refractor/textformfieldstyle.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -67,6 +69,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   void _submitFormOnLogin() async {
     final isValid = _loginFormKey.currentState!.validate();
+
     if (isValid) {
       setState(() {
         _isLoading = true;
@@ -93,14 +96,28 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           },
         );
         // ignore: use_build_context_synchronously
-        GlobalMethod.showErrorDialog(error: error.toString(), ctx: context);
-        // ignore: avoid_print
-        print("error occured $error");
+        GlobalMethod.showErrorDialog(
+            error: "Email not found in database", ctx: context);
       }
     }
     setState(() {
       _isLoading = false;
     });
+  }
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.grey,
+      textColor: Colors.white,
+      fontSize: 16.0,
+      webPosition: "center",
+      webBgColor: "#e74c3c",
+      webShowClose: true,
+    );
   }
 
   @override
@@ -139,7 +156,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                           height: 10,
                         ),
                         Refcontt(
-                          childd: Reftxtfield(
+                          childd: passtxtfield(
                             deccc: deco(
                               'Password',
                               13,
@@ -153,7 +170,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                   _obscureText
                                       ? Icons.visibility_off
                                       : Icons.visibility,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                             ),
@@ -180,7 +197,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                             },
                             child: const Text("Forget password ?",
                                 style: TextStyle(
-                                  color: Colors.greenAccent,
+                                  color: Color(0xFFF5F5DC),
                                   fontSize: 17,
                                   fontStyle: FontStyle.italic,
                                 )),
@@ -212,7 +229,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
                                 ),
-                                const TextSpan(text: '   '),
+                                const TextSpan(text: '  '),
                                 TextSpan(
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () => Navigator.push(

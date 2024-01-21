@@ -19,13 +19,13 @@ class _AllWorkerScreenState extends State<AllWorkerScreen> {
           bottomNavigationBar: BottomNavigationbarforapp(indexNum: 1),
           appBar: AppBar(
             shadowColor: Colors.black,
-            elevation: 10,
+            elevation: 2,
             toolbarHeight: 40,
-            backgroundColor: Colors.blue,
+            backgroundColor: const Color(0xFFF5F5DC),
             title: const Center(
               child: Text('All workers screen',
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white)),
+                      fontWeight: FontWeight.bold, color: Colors.black)),
             ),
           ),
           backgroundColor: Colors.transparent,

@@ -1,8 +1,11 @@
 class Persistent {
   static List<String> jobCategoryList = [
-    'Architecture and Construction',
-    'Education and Training',
-    'Development - Programming',
+    'select a job ',
+    'Architecture ',
+    'Construction',
+    'Education ',
+    'Development ',
+    'IT',
     'Human Resourse',
     'Marketing',
     'Design',

@@ -5,7 +5,6 @@
             "name": "job_portal",
             "request": "launch",
             "type": "dart",
-            "program": "${workspaceFolder}/lib/main.dart",
             "flutterMode": "debug"
         },
         {

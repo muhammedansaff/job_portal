@@ -1,5 +1,6 @@
 // ignore_for_file: unused_element
 
+import 'package:JOBHUB/Services/global_methods.dart';
 import 'package:JOBHUB/Services/global_variables.dart';
 import 'package:JOBHUB/login/login_screen.dart';
 import 'package:JOBHUB/refractor/materialbutton.dart';
@@ -7,7 +8,7 @@ import 'package:JOBHUB/refractor/textformfieldstyle.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:JOBHUB/refractor/container.dart';
 
 class Forgetpassword extends StatefulWidget {
@@ -60,7 +61,8 @@ class _ForgetpasswordState extends State<Forgetpassword>
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => const Login()));
     } catch (error) {
-      Fluttertoast.showToast(msg: error.toString());
+      // ignore: use_build_context_synchronously
+      GlobalMethod.showErrorDialog(error: "Email not found", ctx: context);
     }
   }
 
@@ -92,10 +94,10 @@ class _ForgetpasswordState extends State<Forgetpassword>
                 const Text(
                   'Forget Password',
                   style: TextStyle(
-                      color: Colors.white,
+                      color: Color(0xFFF5F5DC),
                       fontWeight: FontWeight.bold,
                       fontSize: 40,
-                      fontFamily: 'forget'),
+                      fontFamily: 'newfont'),
                 ),
                 const SizedBox(
                   height: 50,

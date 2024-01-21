@@ -16,12 +16,16 @@ class BottomNavigationbarforapp extends StatelessWidget {
   BottomNavigationbarforapp({super.key, required this.indexNum});
 
   void logout(context) {
+    // ignore: no_leading_underscores_for_local_identifiers
     final FirebaseAuth _auth = FirebaseAuth.instance;
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          backgroundColor: const Color(0xFFF3F2EA),
           title: const Row(
             children: [
               Padding(
@@ -37,32 +41,44 @@ class BottomNavigationbarforapp extends StatelessWidget {
                 child: Text(
                   'Sign out',
                   style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
                 ),
               ),
             ],
           ),
           content: const Text(
-            'Do You Want to Log Out?',
+            'Are you sure you want to log out?',
             style: TextStyle(
               color: Colors.black,
+              fontSize: 18,
             ),
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.canPop(context) ? Navigator.pop(context) : null;
+                Navigator.pop(context);
               },
               child: const Text(
-                'NO',
+                'Cancel',
                 style: TextStyle(
-                    color: Colors.black, fontSize: 18, fontFamily: 'forget'),
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
               ),
             ),
-            TextButton(
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
               onPressed: () {
                 _auth.signOut();
-                Navigator.canPop(context) ? Navigator.pop(context) : null;
+                Navigator.pop(context);
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -73,9 +89,11 @@ class BottomNavigationbarforapp extends StatelessWidget {
               child: const Text(
                 'Yes',
                 style: TextStyle(
-                    color: Colors.black, fontSize: 18, fontFamily: 'forget'),
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
               ),
-            )
+            ),
           ],
         );
       },
@@ -86,9 +104,9 @@ class BottomNavigationbarforapp extends StatelessWidget {
   Widget build(BuildContext context) {
     return CurvedNavigationBar(
         animationDuration: const Duration(milliseconds: 300),
-        animationCurve: Curves.bounceInOut,
+        animationCurve: Curves.decelerate,
         color: Colors.white,
-        backgroundColor: const Color.fromARGB(58, 132, 198, 255),
+        backgroundColor: const Color(0xFFECE5B6),
         buttonBackgroundColor: Colors.white,
         height: 50,
         index: indexNum,

@@ -24,15 +24,15 @@ class _JobScreenState extends State<JobScreen> {
               indexNum: 0,
             ),
             appBar: AppBar(
-              elevation: 10,
+              elevation: 2,
               toolbarHeight: 40,
-              shadowColor: Colors.black,
-              backgroundColor: Colors.blue,
+              shadowColor: const Color(0xFFF5F5DC),
+              backgroundColor: const Color(0xFFF5F5DC),
               title: const Center(
                 child: Text(
                   'Jobscreen',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -76,10 +76,10 @@ class _FlowingWaterBackgroundState extends State<FlowingWaterBackground>
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Color(0xFF87CEFA), // Light Sky Blue
-                Color(0xFF00BFFF), // Steel Blue
-                Color(0xFF1E90FF), // Dodger Blue
-                Color(0xFF4682B4), // Deep Sky Blue
+                Color(0xFFF5F5DC), // Beige
+                Color(0xFFF3F2EA), // Cream
+                Color(0xFFF0EAD6), // Pale Cream
+                Color(0xFFECE5B6), // Light Beige // Deep Sky Blue
               ],
               stops: [
                 0.0,
