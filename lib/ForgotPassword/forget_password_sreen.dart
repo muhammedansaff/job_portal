@@ -52,7 +52,7 @@ class _ForgetpasswordState extends State<Forgetpassword>
     _animationController.forward();
     _animationController.repeat();
     super.initState();
-  }
+  } //animation for forgot password
 
   void _forgetPasswordSubmitForm() async {
     try {
@@ -63,7 +63,7 @@ class _ForgetpasswordState extends State<Forgetpassword>
     } catch (error) {
       // ignore: use_build_context_synchronously
       GlobalMethod.showErrorDialog(error: "Email not found", ctx: context);
-    }
+    } //error on email
   }
 
   @override
@@ -72,7 +72,7 @@ class _ForgetpasswordState extends State<Forgetpassword>
       body: Stack(
         children: [
           CachedNetworkImage(
-            imageUrl: forgotimageurl,
+            imageUrl: loginUrlImage,
             placeholder: (context, url) => Image.asset(
               'assets/images/loading.gif',
               fit: BoxFit.cover,
@@ -107,7 +107,10 @@ class _ForgetpasswordState extends State<Forgetpassword>
                     cursorColor: Colors.white,
                     style: newstyle,
                     controller: _forgetPasswordController,
-                    decoration: deco('EmailAdress', 13, const SizedBox()),
+                    decoration: deco(
+                      'EmailAdress',
+                      13,
+                    ),
                   ),
                 ),
                 const SizedBox(

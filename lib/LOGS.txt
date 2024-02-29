@@ -1,0 +1,6 @@
+connection with database successfull
+refactored all essential things for login,signup,forgot
+completed login page
+completed signup 
+completed forgot
+completd bottom navigation bar,

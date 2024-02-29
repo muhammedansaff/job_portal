@@ -21,4 +21,4 @@ class Refimagecached extends StatelessWidget {
         fit: BoxFit.cover,
         alignment: FractionalOffset(animation.value, 0));
   }
-}
+}// refactored cached image network used in login signup and foprgot password

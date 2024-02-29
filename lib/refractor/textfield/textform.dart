@@ -77,6 +77,18 @@ class _ReftxtfieldState extends State<Reftxtfield> {
               return rtntxt;
             }
           }
+          if (widget.typee == 'age') {
+            if (value!.isEmpty) {
+              showToast("enter age");
+              return rtntxt;
+            }
+          }
+          if (widget.typee == 'gender') {
+            if (value!.isEmpty) {
+              showToast("enter gender");
+              return rtntxt;
+            }
+          }
 
           return rtntxt;
         },
@@ -97,8 +109,5 @@ class _ReftxtfieldState extends State<Reftxtfield> {
       webBgColor: "#e74c3c",
       webShowClose: true,
     );
-    setState(() {
-      toastPosition += 50.0;
-    });
   }
-}
+}// refactored textbox for all other

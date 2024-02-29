@@ -55,9 +55,9 @@ dependencies:
      path: packages/pdfx
   cached_network_image: ^3.3.0
   http: ^1.1.2
-  geocoding: ^2.1.1
-  geolocator: ^10.1.0
-  google_maps_flutter: ^2.5.3
+  
+  
+  animate_icons: ^2.0.0
   
   
 

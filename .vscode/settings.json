@@ -1,4 +1,5 @@
 {
     "dart.debugExternalPackageLibraries": true,
-    "dart.debugSdkLibraries": true
+    "dart.debugSdkLibraries": true,
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

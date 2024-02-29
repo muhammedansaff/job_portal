@@ -1,6 +1,6 @@
 class Persistent {
   static List<String> jobCategoryList = [
-    'select a job ',
+    'choose a job ',
     'Architecture ',
     'Construction',
     'Education ',
@@ -11,4 +11,15 @@ class Persistent {
     'Design',
     'Accounting'
   ];
-}
+  static List<String> jobfilterList = [
+    'Architecture ',
+    'Construction',
+    'Education ',
+    'Development ',
+    'IT',
+    'Human Resourse',
+    'Marketing',
+    'Design',
+    'Accounting'
+  ];
+}// needed datas

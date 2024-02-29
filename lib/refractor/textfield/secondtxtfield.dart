@@ -84,4 +84,4 @@ class _passtxtfieldState extends State<passtxtfield> {
       toastPosition += 50.0;
     });
   }
-}
+}// refactored textbox for password and adress only

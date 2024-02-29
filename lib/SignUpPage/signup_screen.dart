@@ -52,6 +52,12 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   final FocusNode _phoneFocusNode = FocusNode();
   final FocusNode _positionFocusNode = FocusNode();
 
+  File? imageFile;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _isloading = false;
+  bool _obscureText = true;
+  String? imageUrl;
+
   //focus nodes and textediting controlls
   @override
   void dispose() {
@@ -88,12 +94,6 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     _animationController.repeat();
     super.initState();
   } //animation background
-
-  File? imageFile;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  bool _isloading = false;
-  bool _obscureText = true;
-  String? imageUrl;
 
 //variables
   void _showImageDialog() {
@@ -177,9 +177,12 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     CroppedFile? croppedimage = await ImageCropper()
         .cropImage(sourcePath: filePath, maxHeight: 1580, maxWidth: 1580);
     if (croppedimage != null) {
-      setState(() {
-        imageFile = File(croppedimage.path);
-      });
+      setState(
+        () {
+          imageFile = File(croppedimage.path);
+          print("image file is${imageFile}");
+        },
+      );
     }
   } //gallery image function
 
@@ -218,15 +221,14 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           },
         );
         // ignore: use_build_context_synchronously
-        Navigator.canPop(context)
-            // ignore: use_build_context_synchronously
-            ? Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Login(),
-                ),
-              )
-            : null;
+
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Login(),
+          ),
+        );
       } catch (error) {
         setState(() {
           _isloading = false;
@@ -246,7 +248,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     return Scaffold(
       body: Stack(
         children: [
-          Refimagecached(animation: _animation, imgurl: signupimageurl),
+          Refimagecached(animation: _animation, imgurl: loginUrlImage),
           Container(
             color: Colors.black38,
             child: Padding(
@@ -270,7 +272,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(50),
                                   border: Border.all(
-                                      color: Colors.black, width: 2)),
+                                      color: const Color(0xFFECE5B6),
+                                      width: 2)),
                               child: ClipOval(
                                 child: imageFile == null
                                     ? Image.asset(
@@ -290,8 +293,10 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                         ),
                         Refcontt(
                           childd: Reftxtfield(
-                              deccc: deco('Full Name/Company Name', 12,
-                                  const SizedBox()),
+                              deccc: deco(
+                                'Full Name/Company Name',
+                                4,
+                              ),
                               typee: 'name',
                               inpp: TextInputType.name,
                               fnode: _emailFocusNode,
@@ -304,8 +309,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                           childd: Reftxtfield(
                             deccc: deco(
                               'Email',
-                              12,
-                              const SizedBox(),
+                              2,
                             ),
                             typee: 'email',
                             inpp: TextInputType.emailAddress,
@@ -319,7 +323,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                         ),
                         Refcontt(
                           childd: Reftxtfield(
-                            deccc: deco(
+                            deccc: passdeco(
                               'Password',
                               12,
                               GestureDetector(
@@ -351,30 +355,39 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                         ),
                         //passwordtextbox
                         Refcontt(
-                            childd: Reftxtfield(
-                          deccc: deco('Phone No', 12, const SizedBox()),
-                          typee: 'number',
-                          inpp: TextInputType.phone,
-                          fnode: _positionFocusNode,
-                          txtcontroller: _phoneNumberConroller,
-                          tonode: _phoneFocusNode,
-                        )),
+                          childd: Reftxtfield(
+                            deccc: deco(
+                              'Phone No',
+                              4,
+                            ),
+                            typee: 'number',
+                            inpp: TextInputType.phone,
+                            fnode: _positionFocusNode,
+                            txtcontroller: _phoneNumberConroller,
+                            tonode: _phoneFocusNode,
+                          ),
+                        ),
                         //phonenumber
                         const SizedBox(
                           height: 15,
                         ),
+
                         Refcontt(
                           childd: passtxtfield(
-                              deccc:
-                                  deco('Adress/Company', 12, const SizedBox()),
+                              deccc: deco(
+                                'Adress/Company',
+                                4,
+                              ),
                               typee: 'adress',
                               inpp: TextInputType.streetAddress,
                               tonode: _positionFocusNode,
                               txtcontroller: _locationConroller),
-                        ), //adress),
+                        ),
+                        //adress),
                         const SizedBox(
                           height: 50,
                         ),
+
                         _isloading
                             ? const Center(
                                 child: SizedBox(
@@ -410,9 +423,13 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                                 const TextSpan(text: "  "),
                                 TextSpan(
                                     recognizer: TapGestureRecognizer()
-                                      ..onTap = () => Navigator.canPop(context)
-                                          ? Navigator.pop(context)
-                                          : null,
+                                      ..onTap = () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const Login(),
+                                            ),
+                                          ),
                                     text: "login",
                                     style: bottomtextstyle)
                               ],

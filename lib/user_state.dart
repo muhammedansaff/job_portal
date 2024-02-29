@@ -1,4 +1,5 @@
-import 'package:JOBHUB/Jobs/Jobs_screen.dart';
+import 'package:JOBHUB/Widgets/bottom_nav_bar.dart';
+
 import 'package:JOBHUB/login/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class UserState extends StatelessWidget {
           return const Login();
         } else if (userSnapshot.hasData) {
           print('user is already logged in yet');
-          return const JobScreen();
+          return const BottomNav();
         } else if (userSnapshot.hasError) {
           return const Scaffold(
             body: Center(

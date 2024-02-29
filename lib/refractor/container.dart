@@ -31,9 +31,9 @@ class uplcontt extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           color: Colors.white,
-          border: Border.all(width: 2, color: Colors.black),
+          border: Border.all(width: 4, color: Colors.black),
           borderRadius: BorderRadius.circular(15),
         ),
         child: childd);
   }
-}
+}//refactored container for the style of each textbox

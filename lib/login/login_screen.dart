@@ -1,9 +1,8 @@
-import 'package:JOBHUB/Jobs/jobs_screen.dart';
-
 import 'package:JOBHUB/refractor/cachedimage.dart';
 import 'package:JOBHUB/refractor/container.dart';
 import 'package:JOBHUB/refractor/materialbutton.dart';
 import 'package:JOBHUB/refractor/textfield/secondtxtfield.dart';
+import 'package:JOBHUB/user_state.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:JOBHUB/refractor/textfield/textform.dart';
 import 'package:JOBHUB/refractor/textformfieldstyle.dart';
@@ -24,7 +23,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> with TickerProviderStateMixin {
-  //variables
   late Animation<double> _animation;
   late AnimationController _animationController;
 
@@ -41,7 +39,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   final _loginFormKey = GlobalKey<FormState>();
 
   get child => null;
-
+  //variables
   @override
   void dispose() {
     _animationController.dispose();
@@ -65,7 +63,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     _animationController.forward();
     _animationController.repeat();
     super.initState();
-  }
+  } // animation controllers
 
   void _submitFormOnLogin() async {
     final isValid = _loginFormKey.currentState!.validate();
@@ -85,7 +83,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
             ? Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const JobScreen(),
+                  builder: (context) => const UserState(),
                 ),
               )
             : null;
@@ -103,7 +101,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     setState(() {
       _isLoading = false;
     });
-  }
+  } // code to check login
 
   void showToast(String message) {
     Fluttertoast.showToast(
@@ -146,7 +144,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                       children: [
                         Refcontt(
                           childd: Reftxtfield(
-                              deccc: deco('Email', 13, const SizedBox()),
+                              deccc: deco('Email', 5),
                               typee: 'email',
                               inpp: TextInputType.emailAddress,
                               fnode: _passFocusNode,
@@ -157,9 +155,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                         ),
                         Refcontt(
                           childd: passtxtfield(
-                            deccc: deco(
+                            deccc: passdeco(
                               'Password',
-                              13,
+                              12,
                               GestureDetector(
                                 onTap: () {
                                   setState(() {
@@ -232,7 +230,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                 const TextSpan(text: '  '),
                                 TextSpan(
                                     recognizer: TapGestureRecognizer()
-                                      ..onTap = () => Navigator.push(
+                                      ..onTap = () => Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
@@ -255,5 +253,5 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         ],
       ),
     );
-  }
+  } //main ui code
 }
