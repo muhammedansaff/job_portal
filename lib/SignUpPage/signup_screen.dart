@@ -180,7 +180,6 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       setState(
         () {
           imageFile = File(croppedimage.path);
-          print("image file is${imageFile}");
         },
       );
     }

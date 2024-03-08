@@ -1,6 +1,8 @@
 import 'package:JOBHUB/Persistent/Persistent.dart';
+
 import 'package:JOBHUB/Search/search_job.dart';
 import 'package:JOBHUB/Services/global_variables.dart';
+
 import 'package:JOBHUB/Widgets/job_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +17,7 @@ class JobScreen extends StatefulWidget {
 }
 
 class _JobScreenState extends State<JobScreen> {
+  Timestamp current = Timestamp.now();
   String? jobcategoryFilter;
   showTaskCategoriesDialog({required Size size}) {
     showDialog(
@@ -85,7 +88,6 @@ class _JobScreenState extends State<JobScreen> {
               onPressed: () {
                 setState(() {
                   jobcategoryFilter = null;
-                  print(jobcategoryFilter);
                 });
                 Navigator.canPop(context) ? Navigator.pop(context) : null;
               },
@@ -116,6 +118,8 @@ class _JobScreenState extends State<JobScreen> {
   void initState() {
     super.initState();
     getMyData();
+    Persistent persistentObject = Persistent();
+    persistentObject.getMyData();
   }
 
   @override
@@ -158,7 +162,7 @@ class _JobScreenState extends State<JobScreen> {
                   .collection('jobs')
                   .where('jobCategory', isEqualTo: jobcategoryFilter)
                   .where('recruitment', isEqualTo: true)
-                  .orderBy('createdat', descending: false)
+                  .orderBy('createdat', descending: true)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -177,7 +181,6 @@ class _JobScreenState extends State<JobScreen> {
                 // ignore: avoid_print
                 print('Data count: ${snapshot.data!.docs.length}');
                 // ignore: avoid_print
-                print(jobcategoryFilter);
 
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
@@ -193,7 +196,7 @@ class _JobScreenState extends State<JobScreen> {
                         jobData['jobDiscription']; // corrected typo
                     final name = jobData['name'];
                     final userImage = jobData['userImage'];
-                    print(name);
+
                     // Use the retrieved data to build your UI components
                     // ...
 
@@ -220,7 +223,7 @@ class _JobScreenState extends State<JobScreen> {
               stream: FirebaseFirestore.instance
                   .collection('jobs')
                   .where('recruitment', isEqualTo: true)
-                  .orderBy('createdat', descending: false)
+                  .orderBy('createdat', descending: true)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -239,7 +242,6 @@ class _JobScreenState extends State<JobScreen> {
                 // ignore: avoid_print
                 print('Data count: ${snapshot.data!.docs.length}');
                 // ignore: avoid_print
-                print(jobcategoryFilter);
 
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
@@ -255,7 +257,7 @@ class _JobScreenState extends State<JobScreen> {
                         jobData['jobDiscription']; // corrected typo
                     final name = jobData['name'];
                     final userImage = jobData['userImage'];
-                    print(name);
+
                     // Use the retrieved data to build your UI components
                     // ...
 

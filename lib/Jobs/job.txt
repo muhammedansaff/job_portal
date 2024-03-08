@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class YourPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('jobs').snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return CircularProgressIndicator();
+          }
+
+          // Iterate through the documents in the "jobs" collection
+          for (DocumentSnapshot doc in snapshot.data!.docs) {
+            // Listen for changes to each document
+            FirebaseFirestore.instance
+                .collection('jobs')
+                .doc(doc.id)
+                .snapshots()
+                .listen((jobSnapshot) {
+              if (!jobSnapshot.exists) {
+                // If a job is deleted, delete corresponding documents from "jobtitle" collection
+                FirebaseFirestore.instance
+                    .collection('jobtitle')
+                    .where('jobid', isEqualTo: doc.id)
+                    .get()
+                    .then((querySnapshot) {
+                  querySnapshot.docs.forEach((doc) {
+                    doc.reference.delete();
+                  });
+                });
+              }
+            });
+          }
+
+          return YourWidget();
+        },
+      ),
+    );
+  }
+}

@@ -48,17 +48,30 @@ class _JobWidgetState extends State<JobWidget> {
               onPressed: () async {
                 try {
                   if (widget.uploadby == _uid) {
+                    // Delete the job document
+                    QuerySnapshot appliedSnapshot = await FirebaseFirestore
+                        .instance
+                        .collection(widget.jobTitle)
+                        .get();
+                    WriteBatch batch = FirebaseFirestore.instance.batch();
+                    appliedSnapshot.docs.forEach((doc) {
+                      batch.delete(doc.reference);
+                    });
+                    await batch.commit();
                     await FirebaseFirestore.instance
                         .collection('jobs')
                         .doc(widget.jobid)
                         .delete();
+
+                    // Delete the 'applied' collection
+
                     await Fluttertoast.showToast(
-                      msg: 'Job has been deleted',
+                      msg: 'Job and applied documents deleted',
                       toastLength: Toast.LENGTH_LONG,
                       backgroundColor: Colors.grey,
                       fontSize: 18,
                     );
-                    // ignore: use_build_context_synchronously
+
                     Navigator.canPop(context) ? Navigator.pop(context) : null;
                   } else {
                     GlobalMethod.showErrorDialog(
@@ -67,39 +80,32 @@ class _JobWidgetState extends State<JobWidget> {
                     );
                   }
                 } catch (error) {
-                  // ignore: use_build_context_synchronously
                   GlobalMethod.showErrorDialog(
                     error: 'This task cannot be deleted',
                     ctx: context,
                   );
                 }
               },
-              child: Padding(
-                padding: const EdgeInsets.only(left: 100),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.delete, color: Colors.red),
-                    const SizedBox(width: 8),
-                    const Text(
-                      'Delete',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Cancel'),
-                    ),
-                  ],
-                ),
-              ),
+              child: const Text('Delete'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
             ),
           ],
         );
       },
     );
-  } //to delete a uploaded job
+  }
+  //to delete a uploaded job
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

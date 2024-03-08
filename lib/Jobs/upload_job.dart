@@ -21,16 +21,42 @@ class _UploadJobNowState extends State<UploadJobNow> {
   final _formkey = GlobalKey<FormState>();
   bool _isloading = false;
   DateTime? picked;
+  bool? isDeadLineAvailable;
+  String? selectedJob;
+  double k = 230;
   Timestamp? deadLineTimeStamp;
-  final TextEditingController _jobCategoryController =
-      TextEditingController(text: Persistent.jobCategoryList[0]);
+  final TextEditingController _jobCategoryController = TextEditingController();
   final TextEditingController _jobTitleController = TextEditingController();
   final TextEditingController _jobDiscriptionController =
       TextEditingController();
-  final TextEditingController _jobDeadlineController =
-      TextEditingController(text: 'pick a Date');
+  final TextEditingController _jobDeadlineController = TextEditingController(
+    text: 'pick a Date',
+  );
+  final TextEditingController _jobtypeController = TextEditingController();
 
-  String selectedCategory = Persistent.jobCategoryList[0];
+  String? selectedCategory = Persistent.jobCategoryList[0];
+  static const Map<String, List<String>> categoryMap = {
+    'General': [
+      'Architecture',
+      'Construction',
+      'Education',
+      'Development',
+      'IT',
+      'Human Resource',
+      'Marketing',
+      'Design',
+      'Accounting'
+    ],
+    'Local': [
+      'Painter',
+      'Plumber',
+      'Driver',
+      'Maid',
+      'Electrician',
+      'Coolie',
+      'Cook'
+    ],
+  };
 
 //variables
 //variables
@@ -99,9 +125,11 @@ class _UploadJobNowState extends State<UploadJobNow> {
       setState(
         () {
           _jobDeadlineController.text =
-              '${picked!.year} - ${picked!.month} - ${picked!.day}';
+              '${picked!.year}-${picked!.month}-${picked!.day}';
           deadLineTimeStamp = Timestamp.fromMicrosecondsSinceEpoch(
               picked!.microsecondsSinceEpoch);
+          var date = deadLineTimeStamp!.toDate();
+          isDeadLineAvailable = date.isAfter(DateTime.now());
         },
       );
     }
@@ -140,7 +168,9 @@ class _UploadJobNowState extends State<UploadJobNow> {
           'name': name,
           'userImage': userImage,
           'location': location,
+          'jobtype': _jobtypeController.text,
           'apllications': 0,
+          'isDeadLineAvailable': isDeadLineAvailable
         });
         await Fluttertoast.showToast(
             msg: 'the task has been  uploaded',
@@ -149,6 +179,7 @@ class _UploadJobNowState extends State<UploadJobNow> {
             fontSize: 20);
         _jobTitleController.clear();
         _jobDiscriptionController.clear();
+        _jobtypeController.clear;
         setState(() {
           selectedCategory = Persistent.jobCategoryList[0];
           _jobDeadlineController.text = 'Pick a Date';
@@ -219,51 +250,88 @@ class _UploadJobNowState extends State<UploadJobNow> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 222, bottom: 10),
-                        child: reftextstyles(label: 'Job Category:'),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 33),
+                            child: reftextstyles(label: 'Job Category:'),
+                          ),
+                          Radio(
+                            value: 'General',
+                            activeColor: Colors.green,
+                            groupValue: selectedCategory,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedCategory = value.toString();
+
+                                _jobtypeController.text =
+                                    selectedCategory.toString();
+                                selectedJob = null;
+
+                                k = 190;
+                              });
+                            },
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(right: 0),
+                            child: Text(
+                              'General',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Radio(
+                            value: 'Local',
+                            groupValue: selectedCategory,
+                            activeColor: Colors.green,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedCategory = value.toString();
+                                _jobtypeController.text =
+                                    selectedCategory.toString();
+
+                                k = 230;
+                                selectedJob = null;
+                              });
+                            },
+                          ),
+                          const Text('Local',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold)),
+                        ],
                       ),
                       uplcontt(
                         childd: Padding(
                           padding: const EdgeInsets.only(left: 7),
                           child: DropdownButton<String>(
-                            value: selectedCategory,
-                            hint: const Text(
-                              'select a job category',
-                              style: TextStyle(color: Colors.grey),
+                            icon: Padding(
+                              padding: EdgeInsets.only(left: k),
+                              child: const Icon(Icons.expand_circle_down_sharp),
                             ),
-                            elevation: 16,
-                            style: const TextStyle(
-                              color: Colors.black, // Change text color
-                              fontSize: 35,
+                            value: selectedJob,
+                            hint: const Text(
+                              'Select a job',
+                              style: TextStyle(color: Colors.black),
                             ),
                             onChanged: (String? newValue) {
-                              if (newValue != null) {
-                                setState(
-                                  () {
-                                    selectedCategory = newValue;
-                                    _jobCategoryController.text = newValue;
-                                  },
-                                );
-                              }
+                              setState(() {
+                                selectedJob = newValue;
+                                _jobCategoryController.text =
+                                    selectedJob.toString();
+                              });
                             },
-                            items: Persistent.jobCategoryList
-                                .map((String category) {
+                            items: categoryMap[selectedCategory]
+                                ?.map((String job) {
                               return DropdownMenuItem<String>(
-                                value: category,
-                                child: Text(
-                                  category,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    color:
-                                        Colors.black, // Change item text color
-                                  ),
-                                ),
+                                value: job,
+                                child: Text(job),
                               );
                             }).toList(),
                           ),
                         ),
-                      ), //selectbox for job
+                      ),
                       const SizedBox(
                         height: 15,
                       ),
