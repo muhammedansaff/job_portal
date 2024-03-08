@@ -398,9 +398,14 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                         Center(
                           child: Bottun(
                             onPressed: () {},
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              child: buttontext("Easy Apply Now"),
+                            child: const Padding(
+                              padding: EdgeInsets.only(top: 0),
+                              child: Text(
+                                "Apply Now",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                         ),
