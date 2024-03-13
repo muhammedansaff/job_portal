@@ -1,4 +1,5 @@
 import 'package:JOBHUB/Persistent/Persistent.dart';
+import 'package:JOBHUB/Search/search_companies.dart';
 import 'package:JOBHUB/Services/global_methods.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,6 +26,8 @@ class _UploadJobNowState extends State<UploadJobNow> {
   String? selectedJob;
   double k = 230;
   Timestamp? deadLineTimeStamp;
+  DateTime? endingDate;
+  String? phoneNumberr;
   final TextEditingController _jobCategoryController = TextEditingController();
   final TextEditingController _jobTitleController = TextEditingController();
   final TextEditingController _jobDiscriptionController =
@@ -130,6 +133,7 @@ class _UploadJobNowState extends State<UploadJobNow> {
               picked!.microsecondsSinceEpoch);
           var date = deadLineTimeStamp!.toDate();
           isDeadLineAvailable = date.isAfter(DateTime.now());
+          endingDate = date.add(const Duration(days: 3));
         },
       );
     }
@@ -170,7 +174,10 @@ class _UploadJobNowState extends State<UploadJobNow> {
           'location': location,
           'jobtype': _jobtypeController.text,
           'apllications': 0,
-          'isDeadLineAvailable': isDeadLineAvailable
+          'isDeadLineAvailable': isDeadLineAvailable,
+          'endingDate': endingDate,
+          'phone': phoneNumberr,
+          'appliedusers': FieldValue.arrayUnion([])
         });
         await Fluttertoast.showToast(
             msg: 'the task has been  uploaded',

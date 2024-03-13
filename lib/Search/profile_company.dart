@@ -1,9 +1,15 @@
+import 'dart:ffi';
+
+import 'package:JOBHUB/Services/global_variables.dart';
 import 'package:JOBHUB/Widgets/bottom_nav_bar.dart';
 import 'package:JOBHUB/refractor/materialbutton.dart';
+import 'package:JOBHUB/user_state.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttericon/font_awesome_icons.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String userId;
@@ -61,13 +67,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
       // Handle error
       setState(() {
         User? user = auth.currentUser;
-        final _uid = user!.uid;
+        final uid = user!.uid;
         _isloading = false; // Update loading state after error
         print(_isSameUser);
-        _isSameUser = _uid == widget.userId;
+        _isSameUser = uid == widget.userId;
         print(name);
       });
     }
+  }
+
+  void openWhatsappChat(String phoneNumber) async {
+    var url = 'https://wa.me/+91$phoneNumber';
+    await launchUrlString(url);
+  }
+
+  emailto(email) {
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: email,
+      query:
+          'subject=Apllying for please&body=Hello,please attach Resume cv file',
+    );
+    final url = params.toString();
+    launchUrlString(url);
+  }
+
+  void openPhone(String phoneNumber) async {
+    var url = 'tel:$phoneNumber';
+    await launchUrlString(url);
   }
 
   Widget userInfo({required IconData icon, required String content}) {
@@ -92,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ? AppBar(
               leading: IconButton(
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const BottomNav()));
@@ -109,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           : AppBar(
               leading: IconButton(
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const BottomNav()));
@@ -118,7 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               backgroundColor: Colors.white,
             ),
-      backgroundColor: const Color(0xFFECE5B6),
+      backgroundColor: const Color(0xFFECE2B6),
       body: Center(
         child: _isloading
             ? const Center(
@@ -139,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(
-                              height: 100,
+                              height: 120,
                             ),
                             Align(
                               alignment: Alignment.center,
@@ -150,7 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                             const SizedBox(
-                              height: 15,
+                              height: 12,
                             ),
                             const Divider(
                               thickness: 1,
@@ -168,7 +195,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                             const SizedBox(
-                              height: 15,
+                              height: 12,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
@@ -187,24 +214,112 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               thickness: 1,
                               color: Colors.black,
                             ),
-                            SizedBox(
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            _isSameUser
+                                ? Container()
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                                width: 2, color: Colors.green)),
+                                        child: IconButton(
+                                            onPressed: () {
+                                              openWhatsappChat(phoneNumber);
+                                            },
+                                            icon: const Icon(
+                                              FontAwesome.whatsapp,
+                                              color: Colors.green,
+                                            )),
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                                width: 2, color: Colors.blue)),
+                                        child: IconButton(
+                                            onPressed: () {
+                                              openPhone(phoneNumber);
+                                            },
+                                            icon: const Icon(
+                                              FontAwesome.phone,
+                                              color: Colors.blue,
+                                            )),
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                                width: 2, color: Colors.red)),
+                                        child: IconButton(
+                                            onPressed: () {
+                                              emailto(email);
+                                            },
+                                            icon: const Icon(
+                                              FontAwesome.mail,
+                                              color: Colors.red,
+                                            )),
+                                      ),
+                                    ],
+                                  ),
+                            const SizedBox(
                               height: 20,
                             ),
                             !_isSameUser
                                 ? Container()
                                 : Center(
                                     child: Padding(
-                                        padding: EdgeInsets.only(bottom: 30),
-                                        child: Bottun(
-                                            onPressed: () {},
-                                            child: const Text(
-                                              'logout',
-                                              style: TextStyle(
-                                                  color: Colors.black),
-                                            ))),
+                                      padding:
+                                          const EdgeInsets.only(bottom: 30),
+                                      child: Bottun(
+                                        onPressed: () {
+                                          auth.signOut();
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const UserState()));
+                                        },
+                                        child: const Text(
+                                          'logout',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                    ),
                                   )
                           ],
                         ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 2,
+                                  color: const Color(0xFFECE2B6),
+                                ),
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: NetworkImage(imageUrl),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       )
                     ],
                   ),

@@ -1,5 +1,6 @@
 import 'package:JOBHUB/Services/global_methods.dart';
 import 'package:JOBHUB/Services/global_variables.dart';
+import 'package:JOBHUB/Widgets/applieduser.dart';
 
 import 'package:JOBHUB/Widgets/bottom_nav_bar.dart';
 import 'package:JOBHUB/Widgets/comments_widget.dart';
@@ -49,6 +50,8 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
   bool? buttoncont = true;
   bool _isCommenting = false;
   bool showComment = false;
+  String? phone;
+  bool appbarbool = false;
 
   final TextEditingController _commentController = TextEditingController();
 
@@ -65,6 +68,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       setState(() {
         authorname = userDoc.get('name');
         userImageUrl = userDoc.get('userImage');
+        phone = userDoc.get('phoneNumber');
       });
     }
     final DocumentSnapshot jobDatabase = await FirebaseFirestore.instance
@@ -105,6 +109,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     // TODO: implement initState
     super.initState();
     getJobData();
+    appbarcheck();
   }
 
   Widget dividerWidgewt() {
@@ -136,9 +141,16 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     addNewApplicant();
   }
 
+  void openPhone(String phoneNumber) async {
+    var url = 'tel:$phoneNumber';
+    addNewApplicant();
+    await launchUrlString(url);
+  }
+
   void addNewApplicant() async {
     User? user = FirebaseAuth.instance.currentUser;
     final uid = user!.uid;
+    String applemail = user.email.toString();
 
     final appliedId = const Uuid().v4();
 
@@ -146,34 +158,40 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     await FirebaseFirestore.instance
         .collection('jobs')
         .doc(widget.jobId)
-        .update({
-      'appliedusers': FieldValue.arrayUnion([
-        {
-          'userId': uid,
-          'appliedid': appliedId,
-          'name': name,
-          'userImageURL': userImage,
-          'jobTitle': jobTitle,
-          'time': Timestamp.now()
-        },
-      ]),
+        .collection('appliedusers')
+        .doc(uid)
+        .set({
+      'userId': uid,
+      'appliedid': appliedId,
+      'name': name,
+      'userImageURL': userImage,
+      'jobTitle': jobTitle,
+      'time': Timestamp.now(),
+      'email': applemail,
+      'jobId': widget.jobId
     });
 
     // After adding the applicant, update the 'applications' field with the count of applied users
-    final jobDocument = await FirebaseFirestore.instance
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('jobs')
         .doc(widget.jobId)
+        .collection('appliedusers')
         .get();
-    final appliedUsers =
-        jobDocument.data()?['appliedusers']; // Get the 'appliedusers' array
-    final applicationsCount =
-        appliedUsers != null ? appliedUsers.length : 0; // Calculate the count
+    setState(() {
+      var appliedIds = querySnapshot.docs.map((doc) => doc.id).toList();
+
+      print(appliedIds); // Print the list of applied user IDs
+
+      // Now you can set state or perform any other operations with the appliedIds list
+    });
+
+    final numberOfDocuments = querySnapshot.docs.length;
 
     await FirebaseFirestore.instance
         .collection('jobs')
         .doc(widget.jobId)
         .update({
-      'apllications': applicationsCount,
+      'apllications': numberOfDocuments,
     });
 
     // ignore: use_build_context_synchronously
@@ -185,11 +203,35 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     );
   }
 
+  void appbarcheck() {
+    User? user = _auth.currentUser;
+    final uid = user!.uid;
+    if (uid == widget.uploadedBy) {
+      setState(() {
+        appbarbool = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFECE5B6),
       appBar: AppBar(
+        actions: [
+          appbarbool
+              ? IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                AppliedUsersList(jobId: widget.jobId)));
+                  },
+                  icon: const Icon(Icons.person_4_outlined),
+                )
+              : const SizedBox()
+        ],
         leading: Padding(
           padding: const EdgeInsets.only(bottom: 3),
           child: IconButton(
@@ -202,7 +244,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => BottomNav(),
+                  builder: (context) => const BottomNav(),
                 ),
               );
             },
@@ -477,7 +519,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                       )
                                     : Bottun(
                                         onPressed: () {
-                                          applyForJob();
+                                          openPhone(phone.toString());
                                         },
                                         child: const Text(
                                           "call now",

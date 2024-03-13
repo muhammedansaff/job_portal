@@ -222,7 +222,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         // ignore: use_build_context_synchronously
 
         // ignore: use_build_context_synchronously
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => const Login(),
@@ -422,7 +422,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                                 const TextSpan(text: "  "),
                                 TextSpan(
                                     recognizer: TapGestureRecognizer()
-                                      ..onTap = () => Navigator.push(
+                                      ..onTap = () => Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>

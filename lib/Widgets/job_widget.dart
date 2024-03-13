@@ -72,6 +72,7 @@ class _JobWidgetState extends State<JobWidget> {
                       fontSize: 18,
                     );
 
+                    // ignore: use_build_context_synchronously
                     Navigator.canPop(context) ? Navigator.pop(context) : null;
                   } else {
                     GlobalMethod.showErrorDialog(
@@ -80,6 +81,7 @@ class _JobWidgetState extends State<JobWidget> {
                     );
                   }
                 } catch (error) {
+                  // ignore: use_build_context_synchronously
                   GlobalMethod.showErrorDialog(
                     error: 'This task cannot be deleted',
                     ctx: context,
@@ -118,7 +120,7 @@ class _JobWidgetState extends State<JobWidget> {
         elevation: 15,
         child: ListTile(
           onTap: () {
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => JobDetailScreen(

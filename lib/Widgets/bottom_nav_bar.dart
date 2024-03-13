@@ -1,4 +1,5 @@
 import 'package:JOBHUB/Jobs/jobs_screen.dart';
+import 'package:JOBHUB/Jobs/posts.dart';
 import 'package:JOBHUB/Jobs/upload_job.dart';
 import 'package:JOBHUB/Search/profile_company.dart';
 import 'package:JOBHUB/Search/search_companies.dart';
@@ -36,7 +37,6 @@ class _bottomnavState extends State<BottomNav> {
     String uid = user!.uid;
     setState(() {
       myid = uid;
-      print(uid.toString());
     });
   }
 
@@ -56,9 +56,7 @@ class _bottomnavState extends State<BottomNav> {
     const JobScreen(),
     const AllWorkerScreen(),
     const UploadJobNow(),
-    ProfileScreen(
-      userId: myid.toString(),
-    ),
+    const PostWidget(),
     const LogoutDialog()
   ];
 
@@ -92,7 +90,7 @@ class _bottomnavState extends State<BottomNav> {
             color: Colors.black,
           ),
           Icon(
-            Icons.person_pin,
+            Icons.photo,
             size: 20,
             color: Colors.black,
           ),
@@ -105,7 +103,6 @@ class _bottomnavState extends State<BottomNav> {
         onTap: (index) {
           setState(() {
             indexnum = index;
-            print('my id=${myid.toString()}');
           });
         },
       ),

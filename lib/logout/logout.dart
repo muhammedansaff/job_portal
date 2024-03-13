@@ -51,7 +51,7 @@ class LogoutDialog extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => BottomNav(),
+                builder: (context) => const BottomNav(),
               ),
             );
           },
