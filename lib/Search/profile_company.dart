@@ -1,6 +1,3 @@
-import 'dart:ffi';
-
-import 'package:JOBHUB/Services/global_variables.dart';
 import 'package:JOBHUB/Widgets/bottom_nav_bar.dart';
 import 'package:JOBHUB/refractor/materialbutton.dart';
 import 'package:JOBHUB/user_state.dart';

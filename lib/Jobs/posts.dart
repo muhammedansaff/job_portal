@@ -15,15 +15,7 @@ class PostWidget extends StatelessWidget {
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('posts')
-            .where(
-              'postedtime',
-              isGreaterThan: Timestamp.fromDate(
-                DateTime.now().subtract(
-                  const Duration(days: 7),
-                ),
-              ),
-            )
-            .orderBy('postedtime', descending: true)
+            .where('dadlinetime', isGreaterThan: Timestamp.now())
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

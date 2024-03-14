@@ -1,7 +1,7 @@
 import 'package:JOBHUB/Jobs/jobs_screen.dart';
 import 'package:JOBHUB/Jobs/posts.dart';
 import 'package:JOBHUB/Jobs/upload_job.dart';
-import 'package:JOBHUB/Search/profile_company.dart';
+
 import 'package:JOBHUB/Search/search_companies.dart';
 import 'package:JOBHUB/logout/logout.dart';
 

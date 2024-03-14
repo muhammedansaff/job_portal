@@ -1,5 +1,5 @@
 import 'package:JOBHUB/Persistent/Persistent.dart';
-import 'package:JOBHUB/Search/search_companies.dart';
+
 import 'package:JOBHUB/Services/global_methods.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';

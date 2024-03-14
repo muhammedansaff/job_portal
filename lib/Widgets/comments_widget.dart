@@ -1,7 +1,8 @@
 import 'package:JOBHUB/Search/profile_company.dart';
-import 'package:JOBHUB/Widgets/bottom_nav_bar.dart';
+
 import 'package:flutter/material.dart';
 
+// ignore: camel_case_types
 class commentsWidget extends StatefulWidget {
   final String commentid;
   final String commenterid;
@@ -20,6 +21,7 @@ class commentsWidget extends StatefulWidget {
   State<commentsWidget> createState() => _commentsWidgetState();
 }
 
+// ignore: camel_case_types
 class _commentsWidgetState extends State<commentsWidget> {
   final List<Color> _colors = [
     Colors.amber,
