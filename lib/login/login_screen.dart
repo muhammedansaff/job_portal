@@ -1,3 +1,5 @@
+import 'package:JOBHUB/location/toast.dart';
+import 'package:JOBHUB/login/check.dart';
 import 'package:JOBHUB/refractor/cachedimage.dart';
 import 'package:JOBHUB/refractor/container.dart';
 import 'package:JOBHUB/refractor/materialbutton.dart';
@@ -48,6 +50,15 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     _passFocusNode.dispose();
 
     super.dispose();
+  }
+
+  void _showCheckerDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const Checker();
+      },
+    );
   }
 
   @override
@@ -143,6 +154,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         Refcontt(
+                          check: true,
                           childd: Reftxtfield(
                               deccc: deco('Email', 5),
                               typee: 'email',
@@ -154,6 +166,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                           height: 10,
                         ),
                         Refcontt(
+                          check: true,
                           childd: passtxtfield(
                             deccc: passdeco(
                               'Password',
@@ -189,8 +202,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const Forgetpassword(),
-                                ),
+                                    builder: (context) => Forgetpassword()),
                               );
                             },
                             child: const Text("Forget password ?",
@@ -205,7 +217,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                           height: 10,
                         ),
                         Bottun(
-                          onPressed: _submitFormOnLogin,
+                          onPressed: () {
+                            _submitFormOnLogin();
+                          },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -230,13 +244,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                 const TextSpan(text: '  '),
                                 TextSpan(
                                     recognizer: TapGestureRecognizer()
-                                      ..onTap = () => Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const SignUp(),
-                                            ),
-                                          ),
+                                      ..onTap = () {
+                                        _showCheckerDialog(context);
+                                      },
                                     text: 'Signup',
                                     style: bottomtextstyle),
                               ],

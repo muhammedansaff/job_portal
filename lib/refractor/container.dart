@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Refcontt extends StatelessWidget {
+  final bool? check;
   final Widget? childd;
   final Widget? text;
-  const Refcontt({super.key, this.childd, this.text});
+  const Refcontt({super.key, this.childd, this.text, this.check});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,11 @@ class Refcontt extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           color: Colors.white,
-          border: Border.all(width: 2, color: const Color(0xFFF5F5DC)),
+          border: Border.all(
+              width: 2,
+              color: check!
+                  ? const Color(0xFFF5F5DC)
+                  : const Color.fromARGB(255, 0, 130, 235)),
           borderRadius: BorderRadius.circular(15),
         ),
         child: childd);

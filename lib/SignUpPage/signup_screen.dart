@@ -20,7 +20,8 @@ import 'package:image_picker/image_picker.dart';
 //import 'package:JOBHUB/SignUpPage/my_slide_show.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+  final String check;
+  const SignUp({super.key, required this.check});
 
   @override
   State<SignUp> createState() => _SignUpState();
@@ -44,6 +45,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
   final TextEditingController _locationConroller =
       TextEditingController(text: '');
+  final TextEditingController _imgcontroller = TextEditingController(text: '');
+  final TextEditingController _proffesioncontroller =
+      TextEditingController(text: '');
 
   final _signupFormKey = GlobalKey<FormState>();
 
@@ -57,6 +61,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   bool _isloading = false;
   bool _obscureText = true;
   String? imageUrl;
+  bool? finder;
+  String? idurl;
 
   //focus nodes and textediting controlls
   @override
@@ -70,6 +76,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     _positionFocusNode.dispose();
     _phoneFocusNode.dispose();
     _animationController.dispose();
+    _imgcontroller.dispose();
+    _proffesioncontroller.dispose();
 
     super.dispose();
   } //dispose function
@@ -92,6 +100,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           });
     _animationController.forward();
     _animationController.repeat();
+    checker();
     super.initState();
   } //animation background
 
@@ -185,10 +194,42 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     }
   } //gallery image function
 
-  void _submitFormssOnignup() async {
+  void _showImagePickerDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Upload a photo"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.camera),
+                title: const Text('Take a photo'),
+                onTap: () {
+                  _getid(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo),
+                title: const Text('Choose from gallery'),
+                onTap: () {
+                  _getid(ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void forWorker() async {
     final isValid = _signupFormKey.currentState!.validate();
     if (isValid) {
-      if (imageFile == null) {
+      if (imageFile == null && _image == null) {
         GlobalMethod.showErrorDialog(
             error: "please pick an image", ctx: context);
         return;
@@ -196,6 +237,80 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       setState(() {
         _isloading = true;
       });
+
+      try {
+        final User? user = _auth.currentUser;
+        if (user == null) {
+          // Handle case where user is null
+          return;
+        }
+        final uid = user.uid;
+        final fer = FirebaseStorage.instance
+            .ref()
+            .child('workersprofile')
+            .child('$uid.jpg');
+        await fer.putFile(imageFile!);
+        imageUrl = await fer.getDownloadURL();
+        final ref =
+            FirebaseStorage.instance.ref().child('workers').child('$uid.jpg');
+        if (_image != null) {
+          await ref.putFile(_image!);
+        } else {
+          // Handle case where _image is null
+          return;
+        }
+        final idurl = await ref.getDownloadURL();
+        await FirebaseFirestore.instance
+            .collection('workers')
+            .doc(_emailtexttConroller.text)
+            .set(
+          {
+            'id': uid,
+            'password': _passwordtexttConroller.text,
+            'name': _fullNameConroller.text,
+            'email': _emailtexttConroller.text,
+            'userImage': imageUrl,
+            'phoneNumber': _phoneNumberConroller.text,
+            'status': false,
+            'createAt': Timestamp.now(),
+            'myId': idurl,
+            'profession': _proffesioncontroller.text,
+            'isWorker': true, // Make sure to get text from controller
+          },
+        );
+
+        // Navigate after successful upload
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Login(),
+          ),
+        );
+      } catch (error) {
+        setState(() {
+          _isloading = false;
+        }); // Stop loading indicator
+
+        // Show error dialog
+        GlobalMethod.showErrorDialog(error: error.toString(), ctx: context);
+      }
+    }
+  }
+
+  void forUser() async {
+    final isValid = _signupFormKey.currentState!.validate();
+
+    if (isValid) {
+      if (imageFile == null) {
+        GlobalMethod.showErrorDialog(
+            error: "please pick an image", ctx: context);
+        return;
+      }
+
+      setState(() {
+        _isloading = true;
+      });
+
       try {
         await _auth.createUserWithEmailAndPassword(
             email: _emailtexttConroller.text.trim().toLowerCase(),
@@ -217,6 +332,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
             'phoneNumber': _phoneNumberConroller.text,
             'location': _locationConroller.text,
             'createAt': Timestamp.now(),
+            'isWorker': false,
           },
         );
         // ignore: use_build_context_synchronously
@@ -237,10 +353,41 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         GlobalMethod.showErrorDialog(error: error.toString(), ctx: context);
       }
     }
+
     setState(() {
       _isloading = false;
     });
   } //submit function
+
+  void checker() {
+    if (widget.check == "user") {
+      setState(() {
+        finder = true;
+        print(widget.check);
+      });
+    } else {
+      setState(() {
+        finder = false;
+        print(widget.check);
+      });
+    }
+
+    print(finder);
+  }
+
+  File? _image;
+  Future<void> _getid(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+        // Set the file name to the text field
+        _imgcontroller.text = _image!.path.split('/').last;
+        print(_image);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -287,10 +434,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+
                         Refcontt(
+                          check: finder,
                           childd: Reftxtfield(
                               deccc: deco(
                                 'Full Name/Company Name',
@@ -305,6 +451,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                           height: 15,
                         ),
                         Refcontt(
+                          check: finder,
                           childd: Reftxtfield(
                             deccc: deco(
                               'Email',
@@ -321,6 +468,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                           height: 15,
                         ),
                         Refcontt(
+                          check: finder,
                           childd: Reftxtfield(
                             deccc: passdeco(
                               'Password',
@@ -354,6 +502,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                         ),
                         //passwordtextbox
                         Refcontt(
+                          check: finder,
                           childd: Reftxtfield(
                             deccc: deco(
                               'Phone No',
@@ -370,18 +519,63 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                         const SizedBox(
                           height: 15,
                         ),
-
-                        Refcontt(
-                          childd: passtxtfield(
-                              deccc: deco(
-                                'Adress/Company',
-                                4,
+                        finder!
+                            ? Refcontt(
+                                check: finder,
+                                childd: passtxtfield(
+                                    deccc: deco(
+                                      'Adress/Company',
+                                      4,
+                                    ),
+                                    typee: 'adress',
+                                    inpp: TextInputType.streetAddress,
+                                    tonode: _positionFocusNode,
+                                    txtcontroller: _locationConroller),
+                              )
+                            : Refcontt(
+                                check: finder,
+                                childd: Stack(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        _showImagePickerDialog(context);
+                                      },
+                                      child: TextField(
+                                        controller: _imgcontroller,
+                                        enabled: false, // Disable editing
+                                        decoration: const InputDecoration(
+                                          hintText: ' Tap to upload a photo',
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 13, right: 13),
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Icon(Icons.photo),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                              typee: 'adress',
-                              inpp: TextInputType.streetAddress,
-                              tonode: _positionFocusNode,
-                              txtcontroller: _locationConroller),
+                        const SizedBox(
+                          height: 15,
                         ),
+                        Visibility(
+                          visible: !finder!,
+                          child: Refcontt(
+                            check: finder,
+                            childd: Reftxtfield(
+                              deccc: deco("profession", 0),
+                              inpp: TextInputType.text,
+                              typee: "prof",
+                              txtcontroller: _proffesioncontroller,
+                            ),
+                          ),
+                        ),
+
                         //adress),
                         const SizedBox(
                           height: 50,
@@ -398,7 +592,13 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                                 ),
                               )
                             : Bottun(
-                                onPressed: _submitFormssOnignup,
+                                onPressed: () {
+                                  if (widget.check == "user") {
+                                    forUser();
+                                  } else {
+                                    forWorker();
+                                  }
+                                },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [buttontext('SignUp')],

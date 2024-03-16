@@ -1,5 +1,4 @@
-import 'package:JOBHUB/location/toast.dart';
-
+import 'package:JOBHUB/Widgets/rating.dart';
 import 'package:flutter/material.dart';
 
 class ApplWidget extends StatefulWidget {

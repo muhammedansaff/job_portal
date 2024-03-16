@@ -54,7 +54,7 @@ class _ReftxtfieldState extends State<Reftxtfield> {
           if (widget.typee == 'name') {
             if (value!.isEmpty) {
               showToast("Name field is missing");
-              ;
+
               return rtntxt;
             }
           }
@@ -65,6 +65,7 @@ class _ReftxtfieldState extends State<Reftxtfield> {
               return rtntxt;
             }
           }
+
           if (widget.typee == 'number') {
             if (value!.isEmpty || value.length != 10) {
               showToast("please Enter a valid phone number ");
@@ -77,15 +78,10 @@ class _ReftxtfieldState extends State<Reftxtfield> {
               return rtntxt;
             }
           }
-          if (widget.typee == 'age') {
+          if (widget.typee == 'prof') {
             if (value!.isEmpty) {
-              showToast("enter age");
-              return rtntxt;
-            }
-          }
-          if (widget.typee == 'gender') {
-            if (value!.isEmpty) {
-              showToast("enter gender");
+              showToast("profession field is missing");
+
               return rtntxt;
             }
           }
