@@ -1,22 +1,21 @@
-import 'package:JOBHUB/Widgets/bottom_nav_bar.dart';
-import 'package:JOBHUB/refractor/materialbutton.dart';
 import 'package:JOBHUB/user_state.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttericon/font_awesome_icons.dart';
+
 import 'package:url_launcher/url_launcher_string.dart';
 
-class ProfileScreen extends StatefulWidget {
+class userProfile extends StatefulWidget {
   final String userId;
-  const ProfileScreen({super.key, required this.userId});
+  final bool isWorker;
+  const userProfile({super.key, required this.userId, required this.isWorker});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<userProfile> createState() => _userProfileState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _userProfileState extends State<userProfile> {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   String? name;
@@ -30,7 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    getUserDataProfile();
+    widget.isWorker ? getworkerDataProfile() : getUserDataProfile();
   }
 
   void getUserDataProfile() async {
@@ -57,6 +56,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
       } else {
         // Document doesn't exist
         setState(() {
+          _isloading = false;
+          print(imageUrl); // Update loading state after data fetch
+        });
+      }
+    } catch (error) {
+      // Handle error
+      setState(() {
+        User? user = auth.currentUser;
+        final uid = user!.uid;
+        _isloading = false; // Update loading state after error
+
+        _isSameUser = uid == widget.userId;
+        print(name);
+      });
+    }
+  }
+
+  void getworkerDataProfile() async {
+    try {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('acceptedworkers')
+          .doc(widget.userId)
+          .get();
+
+      if (userDoc.exists) {
+        setState(() {
+          name = userDoc.get('name');
+          email = userDoc.get('email');
+          phoneNumber = userDoc.get('phoneNumber');
+          imageUrl = userDoc.get('imageUrl');
+        });
+
+        setState(() {
+          _isloading = false; // Update loading state after data fetch
+        });
+      } else {
+        // Document doesn't exist
+        setState(() {
           _isloading = false; // Update loading state after data fetch
         });
       }
@@ -66,9 +103,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         User? user = auth.currentUser;
         final uid = user!.uid;
         _isloading = false; // Update loading state after error
-        print(_isSameUser);
+
         _isSameUser = uid == widget.userId;
-        print(name);
       });
     }
   }
@@ -112,31 +148,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _isSameUser
+      appBar: widget.isWorker
           ? AppBar(
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const BottomNav()));
-                },
-                icon: const Icon(Icons.close),
-              ),
               automaticallyImplyLeading: false,
               backgroundColor: Colors.white,
-              title: const Padding(
-                padding: EdgeInsets.only(left: 70),
-                child: Text('My Profile'),
-              ),
             )
           : AppBar(
+              title: const Text('My Profile'),
               leading: IconButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const BottomNav()));
+                  Navigator.pop(context);
                 },
                 icon: const Icon(Icons.close),
               ),
@@ -154,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Stack(
                     children: [
                       Card(
-                        color: Colors.white10,
+                        color: Colors.black26,
                         margin: const EdgeInsets.all(30),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -163,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(
-                              height: 120,
+                              height: 150,
                             ),
                             Align(
                               alignment: Alignment.center,
@@ -214,84 +235,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const SizedBox(
                               height: 20,
                             ),
-                            _isSameUser
-                                ? Container()
-                                : Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                            Center(
+                              child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 30),
+                                  child: Stack(
                                     children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                width: 2, color: Colors.green)),
-                                        child: IconButton(
-                                            onPressed: () {
-                                              openWhatsappChat(phoneNumber);
-                                            },
-                                            icon: const Icon(
-                                              FontAwesome.whatsapp,
-                                              color: Colors.green,
-                                            )),
-                                      ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                width: 2, color: Colors.blue)),
-                                        child: IconButton(
-                                            onPressed: () {
-                                              openPhone(phoneNumber);
-                                            },
-                                            icon: const Icon(
-                                              FontAwesome.phone,
-                                              color: Colors.blue,
-                                            )),
-                                      ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                width: 2, color: Colors.red)),
-                                        child: IconButton(
-                                            onPressed: () {
-                                              emailto(email);
-                                            },
-                                            icon: const Icon(
-                                              FontAwesome.mail,
-                                              color: Colors.red,
-                                            )),
-                                      ),
-                                    ],
-                                  ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            !_isSameUser
-                                ? Container()
-                                : Center(
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 30),
-                                      child: Bottun(
+                                      ElevatedButton(
                                         onPressed: () {
                                           auth.signOut();
                                           Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const UserState()));
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const UserState(),
+                                            ),
+                                          );
                                         },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              Colors.white, // background color
+                                          foregroundColor:
+                                              Colors.black, // text color
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 12,
+                                              horizontal: 24), // button padding
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                8), // button border radius
+                                          ),
+                                        ),
                                         child: const Text(
-                                          'logout',
-                                          style: TextStyle(color: Colors.black),
+                                          'Logout',
+                                          style: TextStyle(fontSize: 16),
                                         ),
                                       ),
-                                    ),
-                                  )
+                                      const Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 13, left: 75),
+                                        child: Icon(Icons.logout),
+                                      )
+                                    ],
+                                  )),
+                            )
                           ],
                         ),
                       ),
@@ -299,7 +284,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: 20),
+                            padding: const EdgeInsets.only(top: 40),
                             child: Container(
                               width: 100,
                               height: 100,

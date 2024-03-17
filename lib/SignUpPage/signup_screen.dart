@@ -17,6 +17,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 //import 'package:JOBHUB/SignUpPage/my_slide_show.dart';
 
 class SignUp extends StatefulWidget {
@@ -239,12 +240,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       });
 
       try {
-        final User? user = _auth.currentUser;
-        if (user == null) {
-          // Handle case where user is null
-          return;
-        }
-        final uid = user.uid;
+        final uid = const Uuid().v4();
+
         final fer = FirebaseStorage.instance
             .ref()
             .child('workersprofile')
@@ -260,10 +257,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           return;
         }
         final idurl = await ref.getDownloadURL();
-        await FirebaseFirestore.instance
-            .collection('workers')
-            .doc(_emailtexttConroller.text)
-            .set(
+        await FirebaseFirestore.instance.collection('workers').doc(uid).set(
           {
             'id': uid,
             'password': _passwordtexttConroller.text,
@@ -332,7 +326,16 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
             'phoneNumber': _phoneNumberConroller.text,
             'location': _locationConroller.text,
             'createAt': Timestamp.now(),
+          },
+        );
+        FirebaseFirestore.instance.collection('workeranduser').doc(uid).set(
+          {
+            'id': uid,
+            'name': _fullNameConroller.text,
+            'email': _emailtexttConroller.text,
             'isWorker': false,
+            'phoneNumber': _phoneNumberConroller.text,
+            'userImage': imageUrl
           },
         );
         // ignore: use_build_context_synchronously
@@ -544,7 +547,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                                         controller: _imgcontroller,
                                         enabled: false, // Disable editing
                                         decoration: const InputDecoration(
-                                          hintText: ' Tap to upload a photo',
+                                          hintText: ' Tap to upload your Id',
                                           border: InputBorder.none,
                                         ),
                                       ),

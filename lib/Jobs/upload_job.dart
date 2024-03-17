@@ -177,7 +177,6 @@ class _UploadJobNowState extends State<UploadJobNow> {
           'isDeadLineAvailable': isDeadLineAvailable,
           'endingDate': endingDate,
           'phone': phoneNumberr,
-          'appliedusers': FieldValue.arrayUnion([])
         });
         await Fluttertoast.showToast(
             msg: 'the task has been  uploaded',

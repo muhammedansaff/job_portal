@@ -1,15 +1,17 @@
 import 'package:JOBHUB/Services/global_methods.dart';
-import 'package:JOBHUB/Services/global_variables.dart';
-import 'package:JOBHUB/Widgets/applieduser.dart';
 
-import 'package:JOBHUB/Widgets/bottom_nav_bar.dart';
+import 'package:JOBHUB/Widgets/apllied/applieduser.dart';
+
 import 'package:JOBHUB/Widgets/comments_widget.dart';
+
+import 'package:JOBHUB/login/checkuser.dart';
 import 'package:JOBHUB/refractor/materialbutton.dart';
-import 'package:JOBHUB/refractor/opacity.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:url_launcher/url_launcher_string.dart';
@@ -31,8 +33,10 @@ class JobDetailScreen extends StatefulWidget {
 
 class _JobDetailScreenState extends State<JobDetailScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  String rec = '';
   String? authorname;
   String? jobid;
+  String jobposter = '';
   String userImageUrl = '';
   String? jobCategory;
   String? jobDescription = "";
@@ -52,13 +56,48 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
   bool showComment = false;
   String? phone;
   bool appbarbool = false;
+  String? workerurl;
+  String? workername;
+  String? workeremail;
+  String? workerphone;
+  String? workerid;
+  String? workerprof;
+  String? commid;
+  String joburl = '';
+  bool _isRecruitmentOn = true;
+  double? workerrating;
 
   final TextEditingController _commentController = TextEditingController();
+  void getworkerdata() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    final uid = user!.uid;
+    final DocumentSnapshot workerdoc = await FirebaseFirestore.instance
+        .collection('acceptedworkers')
+        .doc(uid)
+        .get();
+    if (workerdoc == null) {
+      return;
+    } else {
+      setState(() {
+        workername = workerdoc.get('name');
+        workerurl = workerdoc.get('imageUrl');
+        workerphone = workerdoc.get('phoneNumber');
+        workeremail = workerdoc.get('email');
+        workerid = workerdoc.get('id');
+        workerprof = workerdoc.get('profession');
+        workerrating = workerdoc.get('rating');
+      });
+    }
+  }
 
   void getJobData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    final uid = user!.uid;
     final DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(widget.uploadedBy)
+        .collection('workeranduser')
+        .doc(uid)
         .get();
 
     // ignore: unnecessary_null_comparison
@@ -69,6 +108,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         authorname = userDoc.get('name');
         userImageUrl = userDoc.get('userImage');
         phone = userDoc.get('phoneNumber');
+        commid = uid;
       });
     }
     final DocumentSnapshot jobDatabase = await FirebaseFirestore.instance
@@ -92,6 +132,8 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         deadLineDate = jobDatabase.get('jobDeadlinedate');
         isDeadLineAvailable = jobDatabase.get('isDeadLineAvailable');
         var postDate = postedDateTimeStamp!.toDate();
+        joburl = jobDatabase.get('userImage');
+        jobposter = jobDatabase.get('name');
         postedDate = '${postDate.year}-${postDate.month}-${postDate.day}';
         if (jobtype == "General") {
           buttoncont = true;
@@ -110,6 +152,8 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     super.initState();
     getJobData();
     appbarcheck();
+
+    getworkerdata();
   }
 
   Widget dividerWidgewt() {
@@ -150,7 +194,6 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
   void addNewApplicant() async {
     User? user = FirebaseAuth.instance.currentUser;
     final uid = user!.uid;
-    String applemail = user.email.toString();
 
     final appliedId = const Uuid().v4();
 
@@ -161,14 +204,17 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         .collection('appliedusers')
         .doc(uid)
         .set({
-      'userId': uid,
+      'userId': workerid,
       'appliedid': appliedId,
-      'name': name,
-      'userImageURL': userImage,
+      'name': workername,
+      'userImageURL': workerurl,
       'jobTitle': jobTitle,
       'time': Timestamp.now(),
-      'email': applemail,
-      'jobId': widget.jobId
+      'email': workeremail,
+      'jobId': widget.jobId,
+      'rating': workerrating,
+      'profession': workerprof,
+      'phone': workerphone
     });
 
     // After adding the applicant, update the 'applications' field with the count of applied users
@@ -198,7 +244,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const BottomNav(),
+        builder: (context) => const CheckUser(),
       ),
     );
   }
@@ -211,6 +257,11 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         appbarbool = true;
       });
     }
+  }
+
+  void openWhatsappChat(String phoneNumber) async {
+    var url = 'https://wa.me/+91$phoneNumber';
+    await launchUrlString(url);
   }
 
   @override
@@ -241,12 +292,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const BottomNav(),
-                ),
-              );
+              Navigator.canPop(context) ? Navigator.pop(context) : null;
             },
           ),
         ),
@@ -300,7 +346,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                 image: DecorationImage(
                                   // ignore: unnecessary_null_comparison
                                   image: NetworkImage(
-                                    userImageUrl,
+                                    joburl,
                                   ),
                                   fit: BoxFit.cover,
                                 ),
@@ -312,7 +358,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    authorname.toString(),
+                                    jobposter,
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
@@ -405,16 +451,10 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                             }
                                             getJobData();
                                           },
-                                          child: const Txt(txt: 'ON')),
-                                      oppp(
-                                        rec: recruitment == true ? 1 : 0,
-                                        col: Colors.red,
-                                      ),
-                                      const SizedBox(
-                                        width: 40,
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
+                                          child: const SizedBox()),
+                                      Checkbox(
+                                        value: recruitment ?? false,
+                                        onChanged: (value) {
                                           User? user = _auth.currentUser;
                                           final uid = user!.uid;
                                           if (uid == widget.uploadedBy) {
@@ -423,7 +463,11 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                                   .collection('jobs')
                                                   .doc(widget.jobId)
                                                   .update(
-                                                      {'recruitment': false});
+                                                      {'recruitment': value});
+                                              setState(() {
+                                                _isRecruitmentOn =
+                                                    value ?? false;
+                                              });
                                             } catch (error) {
                                               GlobalMethod.showErrorDialog(
                                                   error:
@@ -438,13 +482,29 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                           }
                                           getJobData();
                                         },
-                                        child: const Txt(
-                                          txt: "OFF",
-                                        ),
+                                        activeColor: Colors.green,
                                       ),
-                                      oppp(
-                                        rec: recruitment == true ? 1 : 0,
-                                        col: Colors.green,
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 60),
+                                        child: AnimatedDefaultTextStyle(
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                            color: _isRecruitmentOn
+                                                ? Colors.green
+                                                : Colors.red,
+                                          ),
+                                          duration:
+                                              const Duration(milliseconds: 500),
+                                          curve: Curves.linear,
+                                          child: Text(
+                                            _isRecruitmentOn ? 'ON' : 'OFF',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
                                       )
                                     ],
                                   )
@@ -506,26 +566,47 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                 isDeadLineAvailable)
                             ? Center(
                                 child: buttoncont!
-                                    ? Bottun(
+                                    ? IconButton(
                                         onPressed: () {
                                           applyForJob();
                                         },
-                                        child: const Text(
-                                          "apply now",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold),
+                                        icon: const Icon(
+                                          FontAwesome.mail,
+                                          color: Colors.red,
+                                          size: 30,
                                         ),
+                                        color: Colors
+                                            .blue, // Customize the color as needed
                                       )
-                                    : Bottun(
-                                        onPressed: () {
-                                          openPhone(phone.toString());
-                                        },
-                                        child: const Text(
-                                          "call now",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold),
+                                    : Center(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            IconButton(
+                                                onPressed: () {
+                                                  openWhatsappChat(phone!);
+                                                  addNewApplicant();
+                                                },
+                                                icon: const Icon(
+                                                  FontAwesome.whatsapp,
+                                                  color: Colors.green,
+                                                  size: 30,
+                                                )),
+                                            IconButton(
+                                              onPressed: () {
+                                                openPhone(phone.toString());
+                                                addNewApplicant();
+                                              },
+                                              icon: const Icon(
+                                                FontAwesome.phone,
+                                                color: Colors.blue,
+                                                size: 30,
+                                              ),
+                                              color: Colors
+                                                  .blue, // Customize the color as needed
+                                            ),
+                                          ],
                                         ),
                                       ),
                               )
@@ -624,8 +705,12 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                                           'comment cannot be less than 7',
                                                       ctx: context);
                                                 } else {
-                                                  final _generateId =
+                                                  final generateId =
                                                       const Uuid().v4();
+                                                  FirebaseAuth auth =
+                                                      FirebaseAuth.instance;
+                                                  User? user = auth.currentUser;
+                                                  final uid = user!.uid;
                                                   await FirebaseFirestore
                                                       .instance
                                                       .collection('jobs')
@@ -636,16 +721,12 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                                           FieldValue.arrayUnion(
                                                         [
                                                           {
-                                                            'userId':
-                                                                FirebaseAuth
-                                                                    .instance
-                                                                    .currentUser!
-                                                                    .uid,
+                                                            'userId': uid,
                                                             'commentId':
-                                                                _generateId,
-                                                            'name': name,
+                                                                generateId,
+                                                            'name': authorname,
                                                             'userImageURL':
-                                                                userImage,
+                                                                userImageUrl,
                                                             'commentBody':
                                                                 _commentController
                                                                     .text,
@@ -750,6 +831,8 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                     return ListView.separated(
                                       itemBuilder: (context, index) {
                                         return commentsWidget(
+                                            userid: snapshot.data!['jobComments']
+                                                [index]['userId'],
                                             commentid:
                                                 snapshot.data!['jobComments']
                                                     [index]['commentId'],

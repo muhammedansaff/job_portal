@@ -1,5 +1,6 @@
 import 'package:JOBHUB/Jobs/job_details.dart';
 import 'package:JOBHUB/Services/global_methods.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class JobWidget extends StatefulWidget {
 
 class _JobWidgetState extends State<JobWidget> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   _deleteDialog() {
     User? user = _auth.currentUser;
     final _uid = user!.uid;
@@ -101,12 +103,22 @@ class _JobWidgetState extends State<JobWidget> {
       },
     );
   }
+
   //to delete a uploaded job
+  String? id;
+  void getdata() {
+    User? jobuser = _auth.currentUser;
+    final uid = jobuser!.uid;
+    setState(() {
+      id = uid;
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getdata();
   }
 
   @override

@@ -1,16 +1,17 @@
+import 'package:JOBHUB/Jobs/job_widget.dart';
 import 'package:JOBHUB/Persistent/Persistent.dart';
 
 import 'package:JOBHUB/Search/search_job.dart';
 import 'package:JOBHUB/Services/global_variables.dart';
 
-import 'package:JOBHUB/Widgets/job_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 
 class JobScreen extends StatefulWidget {
-  const JobScreen({super.key});
+  final bool isworker;
+  const JobScreen({super.key, required this.isworker});
 
   @override
   State<JobScreen> createState() => _JobScreenState();
@@ -126,160 +127,221 @@ class _JobScreenState extends State<JobScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color(0xFFECE5B6),
-      appBar: AppBar(
-        elevation: 2,
-        toolbarHeight: 40,
-        shadowColor: const Color(0xFFF5F5DC),
-        backgroundColor: const Color(0xFFF5F5F5),
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          onPressed: () {
-            showTaskCategoriesDialog(size: size);
-          },
-          icon: const Icon(
-            Icons.filter_list_rounded,
-            color: Colors.black,
-          ),
-        ),
-        actions: [
-          IconButton(
+        backgroundColor: const Color(0xFFECE5B6),
+        appBar: AppBar(
+          elevation: 2,
+          toolbarHeight: 40,
+          shadowColor: const Color(0xFFF5F5DC),
+          backgroundColor: const Color(0xFFF5F5F5),
+          automaticallyImplyLeading: false,
+          leading: IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (c) => const SearchScreen(),
-                ),
-              );
+              showTaskCategoriesDialog(size: size);
             },
-            icon: const Icon(Icons.search),
-          )
-        ],
-      ),
-      body: jobcategoryFilter != null
-          ? StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('jobs')
-                  .where('jobCategory', isEqualTo: jobcategoryFilter)
-                  .where('recruitment', isEqualTo: true)
-                  .orderBy('createdat', descending: true)
-                  .snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
-                  // ignore: avoid_print
-                  print('Error fetching data: ${snapshot.error}');
-                  return const Center(child: Text('Error fetching data'));
-                }
-
-                if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
-                  return const Center(child: Text('No Jobs found'));
-                }
-
-                // ignore: avoid_print
-                print('Data count: ${snapshot.data!.docs.length}');
-                // ignore: avoid_print
-
-                return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    final jobData = snapshot.data!.docs[index];
-                    final jobTitle = jobData['jobTitle'];
-                    final email = jobData['email'];
-                    final jobid = jobData['jobid'];
-                    final location = jobData['location'];
-                    final recruitment = jobData['recruitment'];
-                    final uploadby = jobData['uploadBy'];
-                    final jobDiscription =
-                        jobData['jobDiscription']; // corrected typo
-                    final name = jobData['name'];
-                    final userImage = jobData['userImage'];
-
-                    // Use the retrieved data to build your UI components
-                    // ...
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 4), // Add vertical spacing here
-                      child: JobWidget(
-                        uploadby: uploadby,
-                        jobTitle: jobTitle,
-                        email: email,
-                        jobDiscription: jobDiscription,
-                        jobid: jobid,
-                        location: location,
-                        name: name,
-                        recruitment: recruitment,
-                        userImage: userImage,
-                      ),
-                    );
-                  },
+            icon: const Icon(
+              Icons.filter_list_rounded,
+              color: Colors.black,
+            ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (c) => const SearchScreen(),
+                  ),
                 );
               },
-            ) //code for filtered list builder
-          : StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('jobs')
-                  .where('recruitment', isEqualTo: true)
-                  .orderBy('createdat', descending: true)
-                  .snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
+              icon: const Icon(Icons.search),
+            )
+          ],
+        ),
+        body: widget.isworker
+            ? jobcategoryFilter != null
+                ? StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('jobs')
+                        .where('jobCategory', isEqualTo: jobcategoryFilter)
+                        .where('recruitment', isEqualTo: true)
+                        .orderBy('createdat', descending: true)
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasError) {
+                        // ignore: avoid_print
+                        print('Error fetching data: ${snapshot.error}');
+                        return const Center(child: Text('Error fetching data'));
+                      }
+
+                      if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
+                        return const Center(child: Text('No Jobs found'));
+                      }
+
+                      // ignore: avoid_print
+                      print('Data count: ${snapshot.data!.docs.length}');
+                      // ignore: avoid_print
+
+                      return ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          final jobData = snapshot.data!.docs[index];
+                          final jobTitle = jobData['jobTitle'];
+                          final email = jobData['email'];
+                          final jobid = jobData['jobid'];
+                          final location = jobData['location'];
+                          final recruitment = jobData['recruitment'];
+                          final uploadby = jobData['uploadBy'];
+                          final jobDiscription =
+                              jobData['jobDiscription']; // corrected typo
+                          final name = jobData['name'];
+                          final userImage = jobData['userImage'];
+
+                          // Use the retrieved data to build your UI components
+                          // ...
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 4), // Add vertical spacing here
+                            child: JobWidget(
+                              uploadby: uploadby,
+                              jobTitle: jobTitle,
+                              email: email,
+                              jobDiscription: jobDiscription,
+                              jobid: jobid,
+                              location: location,
+                              name: name,
+                              recruitment: recruitment,
+                              userImage: userImage,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ) //code for filtered list builder
+                : StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('jobs')
+                        .where('recruitment', isEqualTo: true)
+                        .orderBy('createdat', descending: true)
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasError) {
+                        // ignore: avoid_print
+                        print('Error fetching data: ${snapshot.error}');
+                        return const Center(child: Text('Error fetching data'));
+                      }
+
+                      if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
+                        return const Center(child: Text('No Jobs found'));
+                      }
+
+                      // ignore: avoid_print
+                      print('Data count: ${snapshot.data!.docs.length}');
+                      // ignore: avoid_print
+
+                      return ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          final jobData = snapshot.data!.docs[index];
+                          final jobTitle = jobData['jobTitle'];
+                          final email = jobData['email'];
+                          final jobid = jobData['jobid'];
+                          final location = jobData['location'];
+                          final recruitment = jobData['recruitment'];
+                          final uploadby = jobData['uploadBy'];
+                          final jobDiscription =
+                              jobData['jobDiscription']; // corrected typo
+                          final name = jobData['name'];
+                          final userImage = jobData['userImage'];
+
+                          // Use the retrieved data to build your UI components
+                          // ...
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 2), // Add vertical spacing here
+                            child: JobWidget(
+                              uploadby: uploadby,
+                              jobTitle: jobTitle,
+                              email: email,
+                              jobDiscription: jobDiscription,
+                              jobid: jobid,
+                              location: location,
+                              name: name,
+                              recruitment: recruitment,
+                              userImage: userImage,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  )
+            : StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('jobs')
+                    .where('uploadBy',
+                        isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    // ignore: avoid_print
+                    print('Error fetching data: ${snapshot.error}');
+                    return const Center(child: Text('Error fetching data'));
+                  }
+
+                  if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
+                    return const Center(child: Text('No Jobs found'));
+                  }
+
                   // ignore: avoid_print
-                  print('Error fetching data: ${snapshot.error}');
-                  return const Center(child: Text('Error fetching data'));
-                }
+                  print('Data count: ${snapshot.data!.docs.length}');
+                  // ignore: avoid_print
 
-                if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
-                  return const Center(child: Text('No Jobs found'));
-                }
+                  return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      final jobData = snapshot.data!.docs[index];
+                      final jobTitle = jobData['jobTitle'];
+                      final email = jobData['email'];
+                      final jobid = jobData['jobid'];
+                      final location = jobData['location'];
+                      final recruitment = jobData['recruitment'];
+                      final uploadby = jobData['uploadBy'];
+                      final jobDiscription =
+                          jobData['jobDiscription']; // corrected typo
+                      final name = jobData['name'];
+                      final userImage = jobData['userImage'];
 
-                // ignore: avoid_print
-                print('Data count: ${snapshot.data!.docs.length}');
-                // ignore: avoid_print
+                      // Use the retrieved data to build your UI components
+                      // ...
 
-                return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    final jobData = snapshot.data!.docs[index];
-                    final jobTitle = jobData['jobTitle'];
-                    final email = jobData['email'];
-                    final jobid = jobData['jobid'];
-                    final location = jobData['location'];
-                    final recruitment = jobData['recruitment'];
-                    final uploadby = jobData['uploadBy'];
-                    final jobDiscription =
-                        jobData['jobDiscription']; // corrected typo
-                    final name = jobData['name'];
-                    final userImage = jobData['userImage'];
-
-                    // Use the retrieved data to build your UI components
-                    // ...
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 2), // Add vertical spacing here
-                      child: JobWidget(
-                        uploadby: uploadby,
-                        jobTitle: jobTitle,
-                        email: email,
-                        jobDiscription: jobDiscription,
-                        jobid: jobid,
-                        location: location,
-                        name: name,
-                        recruitment: recruitment,
-                        userImage: userImage,
-                      ),
-                    );
-                  },
-                );
-              },
-            ), // to show all jobs in one
-    );
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 2), // Add vertical spacing here
+                        child: JobWidget(
+                          uploadby: uploadby,
+                          jobTitle: jobTitle,
+                          email: email,
+                          jobDiscription: jobDiscription,
+                          jobid: jobid,
+                          location: location,
+                          name: name,
+                          recruitment: recruitment,
+                          userImage: userImage,
+                        ),
+                      );
+                    },
+                  );
+                },
+              ));
   }
 }

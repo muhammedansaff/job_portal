@@ -1,4 +1,5 @@
-import 'package:JOBHUB/Search/profile_company.dart';
+import 'package:JOBHUB/profilescreens/workersprofile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 
@@ -9,8 +10,10 @@ class commentsWidget extends StatefulWidget {
   final String commentName;
   final String commentBody;
   final String commenterImageUrl;
+  final String userid;
   const commentsWidget(
       {super.key,
+      required this.userid,
       required this.commenterid,
       required this.commentid,
       required this.commentBody,
@@ -23,6 +26,8 @@ class commentsWidget extends StatefulWidget {
 
 // ignore: camel_case_types
 class _commentsWidgetState extends State<commentsWidget> {
+  bool? profcheck = true;
+
   final List<Color> _colors = [
     Colors.amber,
     Colors.orange,
@@ -34,15 +39,41 @@ class _commentsWidgetState extends State<commentsWidget> {
   ];
   @override
   Widget build(BuildContext context) {
+    void proilecheck() {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+      final uid = user!.uid;
+      if (uid == widget.userid) {
+        setState(() {
+          profcheck = true;
+          print("profcheck:${profcheck}");
+          print(uid);
+          print(widget.userid);
+        });
+      } else {
+        setState(() {
+          profcheck = false;
+        });
+      }
+    }
+
     _colors.shuffle();
     return InkWell(
       onTap: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProfileScreen(userId: widget.commenterid),
-          ),
-        );
+        FirebaseAuth auth = FirebaseAuth.instance;
+        User? user = auth.currentUser;
+        final uid = user!.uid;
+        if (uid != widget.userid) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfileScreen(
+                userId: widget.commenterid,
+                isWorker: true,
+              ),
+            ),
+          );
+        }
       },
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

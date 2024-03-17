@@ -1,4 +1,4 @@
-import 'package:JOBHUB/Widgets/bottom_nav_bar.dart';
+import 'package:JOBHUB/login/checkuser.dart';
 import 'package:JOBHUB/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -51,7 +51,7 @@ class LogoutDialog extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const BottomNav(),
+                builder: (context) => const CheckUser(),
               ),
             );
           },

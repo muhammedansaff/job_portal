@@ -1,5 +1,9 @@
-import 'package:JOBHUB/Widgets/rating.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttericon/font_awesome_icons.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+import 'package:JOBHUB/Widgets/rating.dart';
+import 'package:JOBHUB/Widgets/complaints.dart';
 
 class ApplWidget extends StatefulWidget {
   final String jobTitle;
@@ -8,20 +12,53 @@ class ApplWidget extends StatefulWidget {
   final String email;
   final String userImage;
   final String userId;
-  const ApplWidget(
-      {super.key,
-      required this.jobTitle,
-      required this.email,
-      required this.jobID,
-      required this.userImage,
-      required this.username,
-      required this.userId});
+  final double rating;
+
+  const ApplWidget({
+    Key? key,
+    required this.rating,
+    required this.jobTitle,
+    required this.email,
+    required this.jobID,
+    required this.userImage,
+    required this.username,
+    required this.userId,
+  }) : super(key: key);
 
   @override
   State<ApplWidget> createState() => _ApplWidgetState();
 }
 
 class _ApplWidgetState extends State<ApplWidget> {
+  void _showCheckerDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RatingDialog(
+          userId: widget.userId,
+          username: widget.username,
+          jobId: widget.jobID,
+        );
+      },
+    );
+  }
+
+  void _showcomplaindialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ComplaintDialog(
+          jobID: widget.jobID,
+          jobTitle: widget.jobTitle,
+          userId: widget.userId,
+          userImage: widget.userImage,
+          username: widget.username,
+          email: widget.email,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -33,16 +70,11 @@ class _ApplWidgetState extends State<ApplWidget> {
         elevation: 15,
         child: ListTile(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => RatingDialog(
-                        userId: widget.userId,
-                        username: widget.username,
-                      )),
-            );
+            _showCheckerDialog(context);
           },
-          onLongPress: () {},
+          onLongPress: () {
+            _showcomplaindialog(context);
+          },
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           leading: Container(
@@ -74,7 +106,15 @@ class _ApplWidgetState extends State<ApplWidget> {
                 ),
               ),
               const SizedBox(height: 4), // Decreased vertical space here
-              Text(widget.userId)
+              Row(
+                children: List.generate(
+                  5,
+                  (index) => _buildStar(
+                    index,
+                    widget.rating.round().toDouble(),
+                  ),
+                ),
+              ),
             ],
           ),
           subtitle: Text(
@@ -93,6 +133,21 @@ class _ApplWidgetState extends State<ApplWidget> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildStar(int index, double rating) {
+    IconData iconData = Icons.star_border;
+    Color color = Colors.grey;
+
+    if (index < rating) {
+      iconData = Icons.star;
+      color = Colors.amber;
+    }
+
+    return Icon(
+      iconData,
+      color: color,
     );
   }
 }

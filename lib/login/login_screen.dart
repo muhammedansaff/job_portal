@@ -1,10 +1,10 @@
-import 'package:JOBHUB/location/toast.dart';
 import 'package:JOBHUB/login/check.dart';
+import 'package:JOBHUB/login/checkuser.dart';
 import 'package:JOBHUB/refractor/cachedimage.dart';
 import 'package:JOBHUB/refractor/container.dart';
 import 'package:JOBHUB/refractor/materialbutton.dart';
 import 'package:JOBHUB/refractor/textfield/secondtxtfield.dart';
-import 'package:JOBHUB/user_state.dart';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:JOBHUB/refractor/textfield/textform.dart';
 import 'package:JOBHUB/refractor/textformfieldstyle.dart';
@@ -15,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:JOBHUB/ForgotPassword/forget_password_sreen.dart';
 import 'package:JOBHUB/Services/global_methods.dart';
 import 'package:JOBHUB/Services/global_variables.dart';
-import 'package:JOBHUB/SignUpPage/signup_screen.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -83,21 +82,17 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       setState(() {
         _isLoading = true;
       });
+
       try {
         await _auth.signInWithEmailAndPassword(
             email: _emailTextControler.text.trim().toLowerCase(),
             password: _passTextController.text.trim());
-
-        // ignore: use_build_context_synchronously
-        Navigator.canPop(context)
-            // ignore: use_build_context_synchronously
-            ? Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const UserState(),
-                ),
-              )
-            : null;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const CheckUser(),
+          ),
+        );
       } catch (error) {
         setState(
           () {
@@ -202,7 +197,8 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Forgetpassword()),
+                                    builder: (context) =>
+                                        const Forgetpassword()),
                               );
                             },
                             child: const Text("Forget password ?",

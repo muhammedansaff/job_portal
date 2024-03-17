@@ -103,13 +103,14 @@ class _ForgetpasswordState extends State<Forgetpassword>
                   height: 50,
                 ),
                 Refcontt(
+                  check: true,
                   childd: TextField(
                     cursorColor: Colors.white,
                     style: newstyle,
                     controller: _forgetPasswordController,
                     decoration: deco(
                       'EmailAdress',
-                      13,
+                      8,
                     ),
                   ),
                 ),

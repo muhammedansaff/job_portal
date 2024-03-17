@@ -1,20 +1,22 @@
 import 'package:JOBHUB/Jobs/jobs_screen.dart';
-import 'package:JOBHUB/Jobs/posts.dart';
+
 import 'package:JOBHUB/Jobs/upload_job.dart';
 
-import 'package:JOBHUB/Search/search_companies.dart';
 import 'package:JOBHUB/logout/logout.dart';
+import 'package:JOBHUB/profilescreens/userprofile.dart';
+import 'package:JOBHUB/workerscreen/allWorkers.dart';
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 
-class BottomNav extends StatefulWidget {
-  const BottomNav({super.key});
+class UserNav extends StatefulWidget {
+  final bool isworker;
+  const UserNav({super.key, required this.isworker});
 
   @override
-  State<BottomNav> createState() => _bottomnavState();
+  State<UserNav> createState() => _UserNavState();
 }
 
 final FirebaseAuth auth = FirebaseAuth.instance;
@@ -22,15 +24,7 @@ final User? user = auth.currentUser;
 String? myid;
 
 // ignore: camel_case_types
-class _bottomnavState extends State<BottomNav> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getuid();
-  }
-
-  int indexnum = 0;
+class _UserNavState extends State<UserNav> {
   void getuid() {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
@@ -40,12 +34,21 @@ class _bottomnavState extends State<BottomNav> {
     });
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getuid();
+  }
+
+  int indexnum = 0;
+
   Color getBackgroundColor() {
-    if (indexnum == 4) {
-      return Colors.black; // Set background to black when index is 4
-    } else if (indexnum == 2) {
+    if (indexnum == 3) {
+      return const Color(0xFFECE5B6); // Set background to black when index is 4
+    } else if (indexnum == 1) {
       return const Color(0xFF716A76);
-    } else if (indexnum == 3) {
+    } else if (indexnum == 0) {
       return const Color(0xFFECE5B6);
     } else {
       return const Color(0xFFECE5B6);
@@ -53,16 +56,18 @@ class _bottomnavState extends State<BottomNav> {
   }
 
   List screens = [
-    const JobScreen(),
-    const AllWorkerScreen(),
+    const JobScreen(
+      isworker: false,
+    ),
     const UploadJobNow(),
-    const PostWidget(),
+    const AllWorkerScreen(),
     const LogoutDialog()
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
       bottomNavigationBar: CurvedNavigationBar(
         animationDuration: const Duration(milliseconds: 200),
@@ -80,22 +85,17 @@ class _bottomnavState extends State<BottomNav> {
             color: Colors.black,
           ),
           Icon(
-            Icons.search,
-            size: 20,
-            color: Colors.black,
-          ),
-          Icon(
             Icons.add,
             size: 20,
             color: Colors.black,
           ),
           Icon(
-            Icons.photo,
+            Icons.search,
             size: 20,
             color: Colors.black,
           ),
           Icon(
-            Icons.exit_to_app,
+            Icons.logout,
             size: 20,
             color: Colors.black,
           ),
