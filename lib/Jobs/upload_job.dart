@@ -213,6 +213,7 @@ class _UploadJobNowState extends State<UploadJobNow> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF716A76),
       appBar: AppBar(
         automaticallyImplyLeading: false,

@@ -1,8 +1,10 @@
+import 'package:JOBHUB/refractor/container.dart';
 import 'package:JOBHUB/user_state.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttericon/font_awesome_icons.dart';
 
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -24,6 +26,7 @@ class _userProfileState extends State<userProfile> {
   String imageUrl = '';
   String joinedAt = '';
   bool _isloading = true;
+  // ignore: unused_field
   bool _isSameUser = false;
 
   @override
@@ -230,52 +233,49 @@ class _userProfileState extends State<userProfile> {
                             ),
                             const Divider(
                               thickness: 1,
-                              color: Colors.black,
+                              color: Color.fromRGBO(0, 0, 0, 1),
                             ),
                             const SizedBox(
                               height: 20,
                             ),
                             Center(
-                              child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 30),
-                                  child: Stack(
+                              child: SizedBox(
+                                width: 150,
+                                child: MaterialButton(
+                                  focusColor: Colors.white,
+                                  onPressed: () {
+                                    auth.signOut();
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const UserState(),
+                                      ),
+                                    );
+                                  },
+                                  child: const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          auth.signOut();
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const UserState(),
-                                            ),
-                                          );
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              Colors.white, // background color
-                                          foregroundColor:
-                                              Colors.black, // text color
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 12,
-                                              horizontal: 24), // button padding
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                8), // button border radius
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          'Logout',
-                                          style: TextStyle(fontSize: 16),
+                                      Icon(
+                                        FontAwesome
+                                            .logout, // Use a FontAwesome icon for logout
+                                        color: Colors.white,
+                                        // Icon color
+                                      ),
+                                      Text(
+                                        'Logout',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:
+                                              16, // Adjust the font size as needed
                                         ),
                                       ),
-                                      const Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 13, left: 75),
-                                        child: Icon(Icons.logout),
-                                      )
                                     ],
-                                  )),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
                             )
                           ],
                         ),

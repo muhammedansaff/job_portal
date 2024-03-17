@@ -64,7 +64,6 @@ class _AllWorkerScreenState extends State<AllWorkerScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _feedbackController.clear();
   }
 
   void getWorkerData() async {
@@ -98,9 +97,6 @@ class _AllWorkerScreenState extends State<AllWorkerScreen> {
   Future<void> _submitFeedback(String feedback) async {
     try {
       await FirebaseFirestore.instance.collection('feedbacks').add({
-        'userId': userId,
-        'name': feedbackname,
-        'email': feedbackemail,
         'feedback': feedback,
         'createdAt': Timestamp.now(),
       });

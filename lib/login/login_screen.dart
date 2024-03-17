@@ -151,7 +151,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                         Refcontt(
                           check: true,
                           childd: Reftxtfield(
-                              deccc: deco('Email', 5),
+                              deccc: deco('Email', 0),
                               typee: 'email',
                               inpp: TextInputType.emailAddress,
                               fnode: _passFocusNode,
@@ -165,7 +165,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                           childd: passtxtfield(
                             deccc: passdeco(
                               'Password',
-                              12,
+                              4,
                               GestureDetector(
                                 onTap: () {
                                   setState(() {

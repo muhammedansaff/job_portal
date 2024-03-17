@@ -73,6 +73,7 @@ class _AppliedUsersListState extends State<AppliedUsersList> {
                         email: applicantData['email'],
                         userImage: applicantData['userImageURL'],
                         username: applicantData['name'],
+                        phone: applicantData['phone'],
                       );
                     },
                   ),

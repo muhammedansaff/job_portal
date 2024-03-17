@@ -13,13 +13,15 @@ class Checker extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
-      title: const Text(
-        'What are you?',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 20.0,
-          fontWeight: FontWeight.bold,
-        ),
+      title: Row(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 18),
+              child: Image.asset(
+                'assets/images/oops.png',
+                scale: 10,
+              )),
+        ],
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,

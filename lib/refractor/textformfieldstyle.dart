@@ -23,7 +23,7 @@ InputDecoration deco(
 ) {
   return InputDecoration(
       focusedErrorBorder: InputBorder.none,
-      contentPadding: EdgeInsets.only(left: 10, top: topp),
+      contentPadding: EdgeInsets.only(left: 10, top: topp, bottom: 5),
       hintText: hint,
       hintStyle: const TextStyle(color: Color.fromARGB(137, 41, 39, 39)),
       enabledBorder: InputBorder.none,

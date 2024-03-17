@@ -338,7 +338,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
             'userImage': imageUrl
           },
         );
-        // ignore: use_build_context_synchronously
+        // ignore: use_build_context_synchronousl
 
         // ignore: use_build_context_synchronously
         Navigator.pushReplacement(
@@ -443,7 +443,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                           childd: Reftxtfield(
                               deccc: deco(
                                 'Full Name/Company Name',
-                                4,
+                                0,
                               ),
                               typee: 'name',
                               inpp: TextInputType.name,
@@ -475,7 +475,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                           childd: Reftxtfield(
                             deccc: passdeco(
                               'Password',
-                              12,
+                              3,
                               GestureDetector(
                                 onTap: () {
                                   setState(
@@ -509,7 +509,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                           childd: Reftxtfield(
                             deccc: deco(
                               'Phone No',
-                              4,
+                              0,
                             ),
                             typee: 'number',
                             inpp: TextInputType.phone,
@@ -528,7 +528,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                                 childd: passtxtfield(
                                     deccc: deco(
                                       'Adress/Company',
-                                      4,
+                                      0,
                                     ),
                                     typee: 'adress',
                                     inpp: TextInputType.streetAddress,
@@ -547,14 +547,19 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                                         controller: _imgcontroller,
                                         enabled: false, // Disable editing
                                         decoration: const InputDecoration(
+                                          contentPadding: EdgeInsets.only(
+                                              top: 0, bottom: 4, left: 5),
                                           hintText: ' Tap to upload your Id',
+                                          hintStyle: TextStyle(
+                                              color: Color.fromARGB(
+                                                  137, 41, 39, 39)),
                                           border: InputBorder.none,
                                         ),
                                       ),
                                     ),
                                     const Padding(
                                       padding:
-                                          EdgeInsets.only(top: 13, right: 13),
+                                          EdgeInsets.only(top: 10, right: 13),
                                       child: Align(
                                         alignment: Alignment.centerRight,
                                         child: Icon(Icons.photo),

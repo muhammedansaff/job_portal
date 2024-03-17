@@ -105,12 +105,12 @@ class _ForgetpasswordState extends State<Forgetpassword>
                 Refcontt(
                   check: true,
                   childd: TextField(
-                    cursorColor: Colors.white,
+                    cursorColor: Colors.black,
                     style: newstyle,
                     controller: _forgetPasswordController,
                     decoration: deco(
                       'EmailAdress',
-                      8,
+                      0,
                     ),
                   ),
                 ),

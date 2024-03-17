@@ -134,28 +134,32 @@ class _JobScreenState extends State<JobScreen> {
           shadowColor: const Color(0xFFF5F5DC),
           backgroundColor: const Color(0xFFF5F5F5),
           automaticallyImplyLeading: false,
-          leading: IconButton(
-            onPressed: () {
-              showTaskCategoriesDialog(size: size);
-            },
-            icon: const Icon(
-              Icons.filter_list_rounded,
-              color: Colors.black,
-            ),
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (c) => const SearchScreen(),
+          leading: widget.isworker
+              ? IconButton(
+                  onPressed: () {
+                    showTaskCategoriesDialog(size: size);
+                  },
+                  icon: const Icon(
+                    Icons.filter_list_rounded,
+                    color: Colors.black,
                   ),
-                );
-              },
-              icon: const Icon(Icons.search),
-            )
-          ],
+                )
+              : null,
+          actions: widget.isworker
+              ? [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (c) => const SearchScreen(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.search),
+                  )
+                ]
+              : null,
         ),
         body: widget.isworker
             ? jobcategoryFilter != null

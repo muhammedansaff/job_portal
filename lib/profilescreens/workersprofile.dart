@@ -236,6 +236,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildStar(int index, double rating) {
     IconData iconData = Icons.star_border;
+
     Color color = Colors.grey;
 
     if (index < rating) {
@@ -243,13 +244,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       color = Colors.amber;
     }
 
-    return IconButton(
-      icon: Icon(iconData, color: color),
-      onPressed: () {
-        setState(() {
-          _rating = index + 1.0;
-        });
-      },
+    return Icon(
+      iconData,
+      color: color,
+      size: 20,
     );
   }
 }

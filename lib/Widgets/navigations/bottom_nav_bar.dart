@@ -3,7 +3,7 @@ import 'package:JOBHUB/Jobs/jobs_screen.dart';
 import 'package:JOBHUB/Jobs/upload_job.dart';
 
 import 'package:JOBHUB/logout/logout.dart';
-import 'package:JOBHUB/profilescreens/userprofile.dart';
+
 import 'package:JOBHUB/workerscreen/allWorkers.dart';
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';

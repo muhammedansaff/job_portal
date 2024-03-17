@@ -1,3 +1,5 @@
+import 'package:JOBHUB/Jobs/job_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -58,6 +60,54 @@ class _SearchScreenState extends State<SearchScreen> {
         toolbarHeight: 40,
         shadowColor: const Color(0xFFF5F5DC),
         backgroundColor: Colors.white,
+      ),
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: FirebaseFirestore.instance
+            .collection('jobs')
+            .where('jobTitle', isGreaterThanOrEqualTo: searchQuery)
+            .where('recruitment', isEqualTo: true)
+            .snapshots(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.connectionState == ConnectionState.active) {
+            if (snapshot.data?.docs.isNotEmpty == true) {
+              return ListView.builder(
+                itemBuilder: (BuildContext context, int index) {
+                  final jobData = snapshot.data!.docs[index];
+                  final jobTitle = jobData['jobTitle'];
+                  final email = jobData['email'];
+                  final jobid = jobData['jobid'];
+                  final location = jobData['location'];
+                  final recruitment = jobData['recruitment'];
+                  final uploadby = jobData['uploadBy'];
+                  final jobDiscription =
+                      jobData['jobDiscription']; // corrected typo
+                  final name = jobData['name'];
+                  final userImage = jobData['userImage'];
+                  return JobWidget(
+                      uploadby: uploadby,
+                      jobTitle: jobTitle,
+                      email: email,
+                      jobDiscription: jobDiscription,
+                      jobid: jobid,
+                      location: location,
+                      name: name,
+                      recruitment: recruitment,
+                      userImage: userImage);
+                },
+                itemCount: snapshot.data?.docs.length,
+              );
+            } else {
+              const Center(
+                child: Text('no job found'),
+              );
+            }
+          }
+          return const Center(child: Text("no job found"));
+        },
       ),
     );
   }
