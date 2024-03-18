@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:JOBHUB/Services/global_methods.dart';
 import 'package:JOBHUB/Services/global_variables.dart';
+import 'package:JOBHUB/SignUpPage/message.dart';
 import 'package:JOBHUB/login/login_screen.dart';
 import 'package:JOBHUB/refractor/cachedimage.dart';
 import 'package:JOBHUB/refractor/container.dart';
@@ -235,6 +236,17 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
             error: "please pick an image", ctx: context);
         return;
       }
+      if (_passwordtexttConroller.text.isEmpty ||
+          _fullNameConroller.text.isEmpty ||
+          _imgcontroller.text.isEmpty ||
+          _emailtexttConroller.text.isEmpty ||
+          _phoneNumberConroller.text.isEmpty ||
+          _proffesioncontroller.text.isEmpty) {
+        // Show error dialog if any of the fields are empty
+        GlobalMethod.showErrorDialog(
+            error: "All fields are required", ctx: context);
+        return;
+      }
       setState(() {
         _isloading = true;
       });
@@ -272,7 +284,16 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
             'isWorker': true, // Make sure to get text from controller
           },
         );
+        void _showCheckerDialog(BuildContext context) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const SignupMessage();
+            },
+          );
+        }
 
+        _showCheckerDialog(context);
         // Navigate after successful upload
         Navigator.pushReplacement(
           context,
@@ -280,6 +301,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
             builder: (context) => const Login(),
           ),
         );
+        _showCheckerDialog(context);
       } catch (error) {
         setState(() {
           _isloading = false;

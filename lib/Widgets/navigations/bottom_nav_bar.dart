@@ -3,6 +3,7 @@ import 'package:JOBHUB/Jobs/jobs_screen.dart';
 import 'package:JOBHUB/Jobs/upload_job.dart';
 
 import 'package:JOBHUB/logout/logout.dart';
+import 'package:JOBHUB/profilescreens/userprofile.dart';
 
 import 'package:JOBHUB/workerscreen/allWorkers.dart';
 
@@ -46,7 +47,7 @@ class _UserNavState extends State<UserNav> {
   Color getBackgroundColor() {
     if (indexnum == 3) {
       return const Color(0xFFECE5B6); // Set background to black when index is 4
-    } else if (indexnum == 1) {
+    } else if (indexnum == 2) {
       return const Color(0xFF716A76);
     } else if (indexnum == 0) {
       return const Color(0xFFECE5B6);
@@ -59,9 +60,10 @@ class _UserNavState extends State<UserNav> {
     const JobScreen(
       isworker: false,
     ),
-    const UploadJobNow(),
     const AllWorkerScreen(),
-    const LogoutDialog()
+    const UploadJobNow(),
+    userProfile(
+        userId: FirebaseAuth.instance.currentUser!.uid, isWorker: false),
   ];
 
   @override
@@ -85,17 +87,17 @@ class _UserNavState extends State<UserNav> {
             color: Colors.black,
           ),
           Icon(
-            Icons.add,
-            size: 20,
-            color: Colors.black,
-          ),
-          Icon(
             Icons.search,
             size: 20,
             color: Colors.black,
           ),
           Icon(
-            Icons.logout,
+            Icons.add,
+            size: 20,
+            color: Colors.black,
+          ),
+          Icon(
+            Icons.person,
             size: 20,
             color: Colors.black,
           ),

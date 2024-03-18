@@ -10,7 +10,7 @@ class PostWidget extends StatelessWidget {
       backgroundColor: const Color(0xFFECE5B6),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Posts'),
+        title: const Text('job Posts'),
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance

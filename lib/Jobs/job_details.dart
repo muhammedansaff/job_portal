@@ -66,6 +66,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
   String joburl = '';
   bool _isRecruitmentOn = true;
   double? workerrating;
+  double k = 0;
 
   final TextEditingController _commentController = TextEditingController();
   void getworkerdata() async {
@@ -212,7 +213,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       'time': Timestamp.now(),
       'email': workeremail,
       'jobId': widget.jobId,
-      'rating': workerrating,
+      'rating': workerrating == null ? k : k,
       'profession': workerprof,
       'phone': workerphone
     });

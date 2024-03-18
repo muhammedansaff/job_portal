@@ -18,42 +18,6 @@ class _AllWorkerScreenState extends State<AllWorkerScreen> {
   late String feedbackname;
   late String feedbackemail;
 
-  final TextEditingController _feedbackController = TextEditingController();
-
-  Future<void> _showFeedbackDialog() async {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Provide Feedback'),
-          content: TextField(
-            controller: _feedbackController,
-            decoration: const InputDecoration(hintText: 'Enter your feedback'),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Submit'),
-              onPressed: () {
-                String feedback = _feedbackController.text.trim();
-                if (feedback.isNotEmpty) {
-                  _submitFeedback(feedback);
-                  _feedbackController.clear();
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -94,47 +58,10 @@ class _AllWorkerScreenState extends State<AllWorkerScreen> {
     }
   }
 
-  Future<void> _submitFeedback(String feedback) async {
-    try {
-      await FirebaseFirestore.instance.collection('feedbacks').add({
-        'feedback': feedback,
-        'createdAt': Timestamp.now(),
-      });
-
-      print('Feedback submitted successfully');
-    } catch (e) {
-      print('Error submitting feedback: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => userProfile(
-                  userId: FirebaseAuth
-                      .instance.currentUser!.uid, // Placeholder for userId
-                  isWorker: false,
-                ),
-              ),
-            );
-          },
-          icon: const Icon(Icons.person),
-        ),
-        actions: [
-          Align(
-            alignment: Alignment.bottomRight,
-            child: IconButton(
-              icon: const Icon(Icons.feedback),
-              onPressed: _showFeedbackDialog,
-            ),
-          )
-        ],
         automaticallyImplyLeading: false,
         title: const Text('Workers'),
       ),

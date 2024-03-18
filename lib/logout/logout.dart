@@ -73,7 +73,7 @@ class LogoutDialog extends StatelessWidget {
           onPressed: () {
             auth.signOut();
 
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (_) => const Login(),
