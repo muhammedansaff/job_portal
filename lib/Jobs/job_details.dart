@@ -67,6 +67,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
   bool _isRecruitmentOn = true;
   double? workerrating;
   double k = 0;
+  String? userphone;
 
   final TextEditingController _commentController = TextEditingController();
   void getworkerdata() async {
@@ -112,6 +113,22 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         commid = uid;
       });
     }
+    final DocumentSnapshot jobpost = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.uploadedBy)
+        .get();
+
+    // ignore: unnecessary_null_comparison
+    if (jobpost == null) {
+      return;
+    } else {
+      setState(() {
+        userphone = jobpost.get('phoneNumber');
+        print(userphone);
+        print(jobposter);
+      });
+    }
+
     final DocumentSnapshot jobDatabase = await FirebaseFirestore.instance
         .collection('jobs')
         .doc(widget.jobId)
@@ -178,8 +195,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     final Uri params = Uri(
       scheme: 'mailto',
       path: emailCompany,
-      query:
-          'subject=Apllying for $jobTitle&body=Hello,please attach Resume cv file',
+      query: 'subject=Apllying for $jobTitle&body=send a mail',
     );
     final url = params.toString();
     launchUrlString(url);
@@ -596,7 +612,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                                 )),
                                             IconButton(
                                               onPressed: () {
-                                                openPhone(phone.toString());
+                                                openPhone(userphone.toString());
                                                 addNewApplicant();
                                               },
                                               icon: const Icon(
