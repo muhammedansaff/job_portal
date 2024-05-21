@@ -7,22 +7,26 @@ class Persistent {
     'hello',
   ];
   static List<String> jobfilterList = [
-    'Architecture',
-    'Construction',
-    'Education',
-    'Development',
-    'IT',
-    'Human Resource',
-    'Marketing',
-    'Design',
-    'Accounting',
     'Painter',
     'Plumber',
     'Driver',
     'Maid',
     'Electrician',
     'Coolie',
-    'Cook'
+    'Cook',
+    'tree climber',
+    'sweaper',
+    'catering',
+    'delivery',
+    'interlock worker',
+    'carpenter',
+    'Architecture',
+    'Construction',
+    'Education',
+    'Development',
+    'IT',
+    'Human Resource',
+    'other',
   ];
   // needed datas
 

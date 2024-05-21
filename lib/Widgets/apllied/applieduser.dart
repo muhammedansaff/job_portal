@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:JOBHUB/Widgets/apllied/appliedWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class AppliedUsersList extends StatefulWidget {
   final String jobId;
@@ -38,6 +38,11 @@ class _AppliedUsersListState extends State<AppliedUsersList> {
     });
   }
 
+  Future<void> _refreshData() async {
+    // Implement your refresh logic here, for example:
+    await getApplicantsData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,35 +54,38 @@ class _AppliedUsersListState extends State<AppliedUsersList> {
         ),
         automaticallyImplyLeading: true,
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : applicants.isEmpty
-              ? Center(child: Text("No workers have applied for this job"))
-              : Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) {
-                      return const Divider(
-                        thickness: 1,
-                        color: Colors.black,
-                      );
-                    },
-                    itemCount: applicants.length,
-                    itemBuilder: (context, index) {
-                      var applicantData = applicants[index];
-                      return ApplWidget(
-                        rating: applicantData['rating'],
-                        jobID: applicantData['jobId'],
-                        userId: applicantData['userId'],
-                        jobTitle: applicantData['jobTitle'],
-                        email: applicantData['email'],
-                        userImage: applicantData['userImageURL'],
-                        username: applicantData['name'],
-                        phone: applicantData['phone'],
-                      );
-                    },
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : applicants.isEmpty
+                ? Center(child: Text("No workers have applied for this job"))
+                : Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) {
+                        return const Divider(
+                          thickness: 1,
+                          color: Colors.black,
+                        );
+                      },
+                      itemCount: applicants.length,
+                      itemBuilder: (context, index) {
+                        var applicantData = applicants[index];
+                        return ApplWidget(
+                          rating: applicantData['rating'],
+                          jobID: applicantData['jobId'],
+                          userId: applicantData['userId'],
+                          jobTitle: applicantData['jobTitle'],
+                          email: applicantData['email'],
+                          userImage: applicantData['userImageURL'],
+                          username: applicantData['name'],
+                          phone: applicantData['phone'],
+                        );
+                      },
+                    ),
                   ),
-                ),
+      ),
     );
   }
 }

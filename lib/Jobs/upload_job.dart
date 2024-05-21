@@ -1,15 +1,13 @@
 import 'package:JOBHUB/Persistent/Persistent.dart';
-
 import 'package:JOBHUB/Services/global_methods.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:firebase_core/firebase_core.dart';
 import 'package:JOBHUB/Services/global_variables.dart';
+import 'package:JOBHUB/refractor/container.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uuid/uuid.dart';
-import 'package:JOBHUB/refractor/container.dart';
 
 class UploadJobNow extends StatefulWidget {
   const UploadJobNow({super.key});
@@ -46,9 +44,6 @@ class _UploadJobNowState extends State<UploadJobNow> {
       'Development',
       'IT',
       'Human Resource',
-      'Marketing',
-      'Design',
-      'Accounting'
     ],
     'Local': [
       'Painter',
@@ -57,7 +52,14 @@ class _UploadJobNowState extends State<UploadJobNow> {
       'Maid',
       'Electrician',
       'Coolie',
-      'Cook'
+      'Cook',
+      'tree climber',
+      'sweaper',
+      'catering',
+      'delivery',
+      'interlock worker',
+      'carpenter',
+      'other',
     ],
   };
 
@@ -264,6 +266,25 @@ class _UploadJobNowState extends State<UploadJobNow> {
                             child: reftextstyles(label: 'Job Category:'),
                           ),
                           Radio(
+                            value: 'Local',
+                            groupValue: selectedCategory,
+                            activeColor: Colors.green,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedCategory = value.toString();
+                                _jobtypeController.text =
+                                    selectedCategory.toString();
+
+                                k = 199;
+                                selectedJob = null;
+                              });
+                            },
+                          ),
+                          const Text('Local',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold)),
+                          Radio(
                             value: 'General',
                             activeColor: Colors.green,
                             groupValue: selectedCategory,
@@ -288,25 +309,6 @@ class _UploadJobNowState extends State<UploadJobNow> {
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
-                          Radio(
-                            value: 'Local',
-                            groupValue: selectedCategory,
-                            activeColor: Colors.green,
-                            onChanged: (String? value) {
-                              setState(() {
-                                selectedCategory = value.toString();
-                                _jobtypeController.text =
-                                    selectedCategory.toString();
-
-                                k = 230;
-                                selectedJob = null;
-                              });
-                            },
-                          ),
-                          const Text('Local',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold)),
                         ],
                       ),
                       uplcontt(
